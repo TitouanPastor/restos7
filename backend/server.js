@@ -1,10 +1,3 @@
-import dotenv from 'dotenv';
-
-// load environment variables
-dotenv.config();
-
-
-
 // import prisma client
 import { PrismaClient } from '@prisma/client';
 
