@@ -1,5 +1,5 @@
 <template lang="html">
-  <main>
+  <main class="">
     content of home view
   </main>
 </template>
