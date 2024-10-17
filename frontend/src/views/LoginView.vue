@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col h-screen">
         <!-- Login Form Section -->
         <div class="flex-grow flex items-center justify-center bg-gray-100">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
@@ -17,9 +17,10 @@
                     </div>
                     <Button label="Login" type="submit" class="w-full" />
                     <!-- signup btn -->
-                    <router-link to="/signup">
-                        <Button label="Sign Up" type="submit" class="w-full mt-1"
-                            severity="secondary"></Button></router-link>
+                    <router-link to="/signup" class="flex justify-around pt-2">
+                        <a class="underline">Don't have an account</a>
+                        <a class="underline">Forgot password</a>
+                    </router-link>
                 </form>
             </div>
         </div>
