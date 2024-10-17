@@ -4,8 +4,8 @@ import Navbar from './components/Navbar.vue';
 </script>
 
 <template>
-  <!-- <Navbar /> -->
-  <RouterView />
+  <Navbar  />
+  <RouterView class="flex flex-grow w-full max-w-7xl my-0 mx-auto px-2 bg-gray-100 border-x" />
 </template>
 
 <style scoped>

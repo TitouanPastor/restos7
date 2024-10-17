@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <div class="pt-14 flex-grow flex items-center justify-center bg-gray-100">
+        <div class="pt-14 flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
                 <h2 class="text-2xl font-bold text-center mb-6">Resto7 - Signup</h2>
                 <form @submit.prevent="signup">
