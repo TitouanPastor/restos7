@@ -1,7 +1,4 @@
 <template lang="html">
-  <main class="">
-    content of home view
-  </main>
   <div v-for="index in n" :key="index">
       <Post />
   </div>

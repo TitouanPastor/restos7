@@ -14,9 +14,15 @@
     </div>
 </template>
 
-<script setup>
+<script>
 import { ref } from "vue";
 import Carousel from 'primevue/carousel';
+
+export default {
+    components:{
+        Carousel
+    }
+}
 
 const images = ref([
     { image: "../../public/sablesOr_1.jpg", name: "sablesOr_1" },
