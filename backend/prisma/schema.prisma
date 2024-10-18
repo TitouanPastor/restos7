@@ -80,10 +80,10 @@ model User {
   Id_User     Int          @id @default(autoincrement()) @map("Id_Person")
   name        String
   firstname   String
-  Id_Photo    Int
-  email       String
+  Id_Photo    Int?
+  email       String       @unique
   password    String
-  photo       Photo        @relation(fields: [Id_Photo], references: [Id_Photo])
+  photo       Photo?       @relation(fields: [Id_Photo], references: [Id_Photo]) // Relation optionnelle
   posts       Post[]
   notes       Note[]
   permissions Permission[]

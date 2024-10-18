@@ -2,18 +2,20 @@
     <div class="flex flex-col">
         <div class="pt-14 flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <h2 class="flex justify-center text-2xl font-bold text-center mb-6"><Logo/>&nbsp;- Login</h2>
+                <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
+                    <Logo />&nbsp;- Login
+                </h2>
                 <form @submit.prevent="login">
                     <InputGroup class=" mb-4">
                         <InputGroupAddon>
                             <i class="pi pi-envelope"></i>
                         </InputGroupAddon>
                         <InputText id="email" v-model="email" class="w-full p-inputtext-sm"
-                            placeholder="Enter your email" :invalid="!emailGood"/>
+                            placeholder="Enter your email" :invalid="!emailGood" />
                     </InputGroup>
                     <InputGroup class="mb-8">
                         <Password id="password" v-model="password" class="w-full p-inputtext-sm rounded-l-none"
-                            placeholder="Enter your password" toggleMask :invalid="!passwordGood"/>
+                            placeholder="Enter your password" toggleMask :invalid="!passwordGood" />
                     </InputGroup>
                     <div v-if="passwordError" class="text-red-500 text-sm mb-4">{{ emailError }}</div>
                     <Message v-if="errorMsg" class="text-red-500 text-sm mb-4 mt-2" severity="error">{{ errorMsg }}
@@ -38,6 +40,7 @@ import InputGroupAddon from 'primevue/inputgroupaddon';
 import Message from 'primevue/message';
 import { ref } from 'vue';
 import Logo from '@/components/Logo.vue';
+import api from '@/axios'; // Importe l'instance Axios configurée
 
 
 // Data
@@ -48,7 +51,7 @@ const passwordGood = ref(true);
 const errorMsg = ref('');
 
 // Methods
-const login = function () {
+const login = async function () {
     // Reset validation indicators
     emailGood.value = isValidEmail(email.value);
     passwordGood.value = !!password.value.trim();
@@ -57,7 +60,24 @@ const login = function () {
         // Call the API to authenticate the user
         // If the authentication is successful, redirect to the home page
         // Otherwise, display an error message
-        console.log('Login', email.value, password.value);
+        try {
+            const response = await api.post('/auth/login', {
+                email: email.value,
+                password: password.value,
+            });
+
+            console.log('Login successful:', response.data);
+            const { token } = response.data;
+
+            // Stocker le token dans localStorage
+            localStorage.setItem('authToken', token);
+
+            // Rediriger l'utilisateur après un login réussi
+            router.push('/');
+        } catch (error) {
+            console.error('Login failed:', error.response.data.error);
+            errorMsg.value = error.response.data.error;
+        }
     } else {
         if (!emailGood.value && !passwordGood.value) {
             errorMsg.value = 'Please enter your email and password in a correct format';

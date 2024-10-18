@@ -1,23 +1,25 @@
-// import prisma client
-import { PrismaClient } from '@prisma/client';
+// app.js
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import authRoutes from './routes/auth_routes.js';
+import usersRoutes from './routes/users_routes.js';
+import dotenv from 'dotenv';
 
-// create an instance of PrismaClient
-const prisma = new PrismaClient();
+dotenv.config();  // To load environment variables
 
-// select all persons
-const persons = await prisma.User.findMany();
+const app = express();
 
-// log all persons
-console.log(persons);
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
 
-// for every person, log their posts
-for (const person of persons) {
-  console.log(person.posts);
-}
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
 
-const posts = await prisma.Post.findMany({include: {user: true}});
-
-// log all posts
-console.log(posts);
-
-// for every post, log its author
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

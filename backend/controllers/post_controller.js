@@ -1,4 +1,4 @@
-const { PostService } = require('../service/post_service');
+import { PostService } from '../services/post_service';
 
 class PostController {
 
