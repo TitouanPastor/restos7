@@ -9,12 +9,84 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
 }
 
-model person {
-  id_person Int    @id @default(autoincrement())
-  name      String
-  surname   String
+model Country {
+  Id_Country Int          @id @default(autoincrement())
+  name       String
+  restaurant Restaurant[]
+}
+
+model Permission {
+  Id_Permission Int    @id @default(autoincrement())
+  name          String
+  user          User[]
+}
+
+model Photo {
+  Id_Photo   Int          @id @default(autoincrement())
+  url        String
+  alt        String
+  person     User[]
+  restaurant Restaurant[]
+}
+
+model Restaurant {
+  Id_Restaurant Int     @id @default(autoincrement())
+  name          String
+  postal_code   String
+  city          String
+  address       String
+  description   String
+  website       String
+  Id_Country    Int
+  country       Country @relation(fields: [Id_Country], references: [Id_Country])
+  posts         Post[]
+  notes         Note[]
+  photos        Photo[]
+}
+
+model Post {
+  Id_Restaurant  Int
+  Id_Post        Int        @default(autoincrement())
+  Id_User        Int        @map("Id_Person")
+  comment        String
+  upvote         Int
+  downvote       Int
+  Id_Post_Parent Int?
+  user           User       @relation(fields: [Id_User], references: [Id_User])
+  restaurant     Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
+  parent         Post?      @relation("postReplies", references: [Id_Post, Id_Restaurant], fields: [Id_Post_Parent, Id_Restaurant], onDelete: NoAction, onUpdate: NoAction)
+  replies        Post[]     @relation("postReplies")
+
+  @@id([Id_Post, Id_Restaurant])
+}
+
+model Note {
+  Id_User       Int        @map("Id_Person")
+  Id_Restaurant Int
+  score         String
+  comment       String
+  user          User       @relation(fields: [Id_User], references: [Id_User])
+  restaurant    Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
+
+  @@id([Id_User, Id_Restaurant])
+}
+
+model User {
+  Id_User     Int          @id @default(autoincrement()) @map("Id_Person")
+  name        String
+  firstname   String
+  Id_Photo    Int
+  email       String
+  password    String
+  photo       Photo        @relation(fields: [Id_Photo], references: [Id_Photo])
+  posts       Post[]
+  notes       Note[]
+  permissions Permission[]
+
+  @@map("Person")
 }

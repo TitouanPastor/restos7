@@ -4,19 +4,20 @@ import { PrismaClient } from '@prisma/client';
 // create an instance of PrismaClient
 const prisma = new PrismaClient();
 
-// create a new person with his name and surname
-const person = await prisma.person.create({
-    data: {
-        name: 'John',
-        surname: 'Doe',
-    },
-});
-
-// log the created person
-console.log(person);
-
 // select all persons
-const persons = await prisma.person.findMany();
+const persons = await prisma.User.findMany();
 
 // log all persons
 console.log(persons);
+
+// for every person, log their posts
+for (const person of persons) {
+  console.log(person.posts);
+}
+
+const posts = await prisma.Post.findMany({include: {user: true}});
+
+// log all posts
+console.log(posts);
+
+// for every post, log its author
