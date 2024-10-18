@@ -2,7 +2,7 @@
     <div class="border w-full bg">
         <nav class="flex items-center justify-between p-2 max-w-7xl m-auto">
             <router-link to="/">
-                <h1 class="text-2xl font-bold">Resto<span style="color: var(--p-primary-400);">7</span></h1>
+                <Logo/>
             </router-link>
             <router-link to="/login"><Button>Login</Button></router-link>
 
@@ -10,23 +10,20 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import Logo from '@/components/Logo.vue';
 import Button from 'primevue/button';
-export default {
-    components: {
-        Button,
-    },
-    data() {
-        return {
-            isAuthenticated: false,
-        };
-    },
-    methods: {
-        toggleAuth() {
-            this.isAuthenticated = !this.isAuthenticated;
-        },
-    },
-};
+import { ref } from 'vue';
+
+
+// Data
+const isAuthenticated = ref(false);
+
+// Methods
+const toggleAuth = function() {
+	isAuthenticated.value = !isAuthenticated.value;
+}
+
 </script>
 
 <style lang="css">
