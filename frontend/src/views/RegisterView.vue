@@ -2,8 +2,10 @@
     <div class="flex flex-col">
         <div class="pt-14 flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <h2 class="flex justify-center text-2xl font-bold text-center mb-6"><Logo/>&nbsp;- Sign Up</h2>
-                <form @submit.prevent="signup">
+                <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
+                    <Logo />&nbsp;- Sign Up
+                </h2>
+                <form @submit.prevent="register">
                     <InputText id="firstName" v-model="firstName" class="w-full p-inputtext-sm mb-4"
                         placeholder="First Name" :invalid="!firstNameGood" />
                     <InputText id="lastName" v-model="lastName" class="w-full p-inputtext-sm mb-4"
@@ -40,6 +42,8 @@ import InputGroupAddon from 'primevue/inputgroupaddon';
 import Message from 'primevue/message';
 import Password from 'primevue/password';
 import { ref } from 'vue';
+import api from '@/axios'; // Importe l'instance Axios configurée
+import router from '@/router'; // Importe le router pour rediriger l'utilisateur
 
 
 // Data
@@ -54,7 +58,7 @@ const passwordGood = ref(true); // Indique si le mot de passe est valide
 const errorMsg = ref(''); // Message d'erreur général (si besoin)
 
 // Methods
-const signup = function () {
+const register = function () {
     // Réinitialisation des indicateurs de validation
     firstNameGood.value = !!firstName.value.trim();
     lastNameGood.value = !!lastName.value.trim();
@@ -63,7 +67,20 @@ const signup = function () {
 
     // Vérification si tous les champs sont valides
     if (firstNameGood.value && lastNameGood.value && emailGood.value && passwordGood.value) {
-        console.log('Signing up with:', firstName.value, lastName.value, email.value, password.value);
+        // Envoi de la requête à l'API
+        api.post('/auth/register', {
+            name: lastName.value,
+            firstname: firstName.value,
+            email: email.value,
+            password: password.value,
+        }).then(() => {
+            // Rediriger l'utilisateur vers la page de connexion
+            router.push({ path: '/login', query: { message: 'Registration successful. You can now login.' } });
+        }).catch((error) => {
+            // Afficher l'erreur
+            console.log(error);
+            errorMsg.value = error.response?.data?.error || 'Register failed';
+        });
     } else {
         if (!emailGood.value) {
             errorMsg.value = 'Please enter a valid email address.';

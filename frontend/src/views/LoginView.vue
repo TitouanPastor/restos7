@@ -20,8 +20,9 @@
                     <div v-if="passwordError" class="text-red-500 text-sm mb-4">{{ emailError }}</div>
                     <Message v-if="errorMsg" class="text-red-500 text-sm mb-4 mt-2" severity="error">{{ errorMsg }}
                     </Message>
+                    <Message v-if="successMsg" class="text-green-500 text-sm mb-4 mt-2" severity="success">{{ successMsg }}</Message>
                     <Button label="Login" type="submit" class="w-full" />
-                    <router-link to="/signup" class="flex justify-around pt-2">
+                    <router-link to="/register" class="flex justify-around pt-2">
                         <a class="underline">Don't have an account</a>
                         <a class="underline">Forgot password</a>
                     </router-link>
@@ -38,10 +39,11 @@ import Password from 'primevue/password';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import Message from 'primevue/message';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Logo from '@/components/Logo.vue';
 import api from '@/axios'; // Importe l'instance Axios configurée
-
+import router from '@/router'; // Importe le router pour rediriger l'utilisateur
+import { useStore } from "vuex"; // Utiliser le store Vuex
 
 // Data
 const email = ref('');
@@ -49,17 +51,20 @@ const emailGood = ref(true);
 const password = ref('');
 const passwordGood = ref(true);
 const errorMsg = ref('');
+const successMsg = ref('');
+
+// Utiliser Vuex store
+const store = useStore();
 
 // Methods
 const login = async function () {
+    // restet the success message if any
+    successMsg.value = '';
     // Reset validation indicators
     emailGood.value = isValidEmail(email.value);
     passwordGood.value = !!password.value.trim();
 
     if (emailGood.value && passwordGood.value) {
-        // Call the API to authenticate the user
-        // If the authentication is successful, redirect to the home page
-        // Otherwise, display an error message
         try {
             const response = await api.post('/auth/login', {
                 email: email.value,
@@ -67,34 +72,33 @@ const login = async function () {
             });
 
             console.log('Login successful:', response.data);
-            const { token } = response.data;
+            const { token, user } = response.data;
 
-            // Stocker le token dans localStorage
-            localStorage.setItem('authToken', token);
+            // Utilise Vuex pour stocker l'utilisateur et le token
+            store.dispatch('login', { user, token });
 
             // Rediriger l'utilisateur après un login réussi
             router.push('/');
         } catch (error) {
-            console.error('Login failed:', error.response.data.error);
-            errorMsg.value = error.response.data.error;
+            errorMsg.value = error.response?.data?.error || 'Login failed';
         }
     } else {
-        if (!emailGood.value && !passwordGood.value) {
-            errorMsg.value = 'Please enter your email and password in a correct format';
-        } else if (!emailGood.value) {
-            errorMsg.value = 'Please enter a valid email';
-        } else {
-            errorMsg.value = 'Please enter your password';
-        }
+        errorMsg.value = 'Please enter your email and password in a correct format';
     }
-}
+};
 
 const isValidEmail = function (email) {
-    // Regex simple pour valider un email
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(email);
-}
+};
 
+// Check for query parameter on component mount
+onMounted(() => {
+    const query = router.currentRoute.value.query;
+    if (query.message) {
+        successMsg.value = query.message;
+    }
+});
 </script>
 
 <style scoped>

@@ -1,31 +1,45 @@
 <template>
-    <div class="border w-full bg">
+    <div v-if="!['/login', '/register'].includes(router.currentRoute.value.path)" class="border w-full bg">
         <nav class="flex items-center justify-between p-2 max-w-7xl m-auto">
             <router-link to="/">
-                <Logo/>
+                <Logo />
             </router-link>
-            <router-link to="/login"><Button>Login</Button></router-link>
 
+            <div v-if="isLoggedIn" class="flex gap-1">
+                <router-link to="/profile" class="flex items-center">
+                    <Button label="Profile" icon="pi pi-user" severity="secondary"
+                        :title="'connected as ' + currentUser.name" />
+                </router-link>
+                <router-link to="/login">
+                    <Button icon="pi pi-sign-out" iconPos="right" @click="logout"></Button>
+                </router-link>
+            </div>
+
+            <router-link v-else to="/login">
+                <Button>Login</Button>
+            </router-link>
         </nav>
     </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import Logo from '@/components/Logo.vue';
 import Button from 'primevue/button';
-import { ref } from 'vue';
+import router from '@/router';
 
+// Utilise Vuex pour accéder aux données du store
+const store = useStore();
+const isLoggedIn = computed(() => store.getters.isLoggedIn);
+const currentUser = computed(() => store.getters.currentUser);
 
-// Data
-const isAuthenticated = ref(false);
-
-// Methods
-const toggleAuth = function() {
-	isAuthenticated.value = !isAuthenticated.value;
-}
-
+// Méthode pour déconnecter l'utilisateur
+const logout = () => {
+    store.dispatch('logout');
+};
 </script>
 
-<style lang="css">
-/* Vous pouvez personnaliser les styles ici si nécessaire */
+<style scoped>
+/* Custom styling if needed */
 </style>

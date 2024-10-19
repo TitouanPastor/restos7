@@ -1,6 +1,7 @@
 // src/axios.js
 import axios from 'axios';
-import router from './router/index.js'; // Assurez-vous que votre routeur est importé si nécessaire
+import store from './store'; // Importer Vuex store
+import router from './router'; // Importer Vue Router si nécessaire
 
 // Crée une instance Axios
 const api = axios.create({
@@ -10,29 +11,22 @@ const api = axios.create({
 // Intercepteur de requêtes : Ajouter le token JWT à chaque requête
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken'); // Récupère le token depuis localStorage (ou sessionStorage/cookies)
-
+    const token = store.state.token; // Récupérer le token depuis Vuex
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // Ajoute le token dans les headers
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
-
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Intercepteur de réponses : Gérer les erreurs 401 (non autorisé)
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Si l'erreur est 401, rediriger vers la page de login
-      localStorage.removeItem('authToken'); // Supprimer le token si nécessaire
-      router.push('/login'); // Rediriger l'utilisateur vers la page de login
+      store.dispatch('logout'); // Déconnecter l'utilisateur en cas d'erreur 401
+      router.push('/login'); // Rediriger vers la page de login
     }
     return Promise.reject(error);
   }
