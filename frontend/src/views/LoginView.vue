@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <div class="pt-14 flex items-center justify-center">
+        <div class="pt-24 flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
                 <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
                     <Logo />&nbsp;- Login
@@ -22,7 +22,7 @@
                     </Message>
                     <Message v-if="successMsg" class="text-green-500 text-sm mb-4 mt-2" severity="success">{{ successMsg }}</Message>
                     <Button label="Login" type="submit" class="w-full" />
-                    <router-link to="/register" class="flex justify-around pt-2">
+                    <router-link to="/auth/register" class="flex justify-around pt-2">
                         <a class="underline">Don't have an account</a>
                         <a class="underline">Forgot password</a>
                     </router-link>
@@ -97,6 +97,9 @@ onMounted(() => {
     const query = router.currentRoute.value.query;
     if (query.message) {
         successMsg.value = query.message;
+    }
+    if (query.error) {
+        errorMsg.value = query.error;
     }
 });
 </script>

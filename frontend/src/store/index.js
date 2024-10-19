@@ -24,22 +24,18 @@ export default createStore({
     },
     actions: {
         login({ commit }, { user, token }) {
-            console.log("VueX login");
             commit('setUser', user);
             commit('setToken', token);
         },
         logout({ commit }) {
-            console.log("VueX logout");
             commit('logout');
         }
     },
     getters: {
         isLoggedIn(state) {
-            console.log(state.token);
             return !!state.token;
         },
         currentUser(state) {
-            console.log(state.user);
             return state.user;
         }
     },

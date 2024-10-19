@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import DetailView from '@/views/DetailView.vue'
+import ProfilView from '@/views/ProfilView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,14 +13,19 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/login',
+      path: '/auth/login',
       name: 'login',
       component: LoginView
     },
     {
-      path: '/register',
+      path: '/auth/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/users/me',
+      name: 'profil',
+      component: ProfilView
     },
     {
       path: '/detail',

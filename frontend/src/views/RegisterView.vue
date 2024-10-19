@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <div class="pt-14 flex items-center justify-center">
+        <div class="pt-24 flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
                 <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
                     <Logo />&nbsp;- Sign Up
@@ -24,7 +24,7 @@
                     <Message v-if="errorMsg" class="text-red-500 text-sm mb-4 mt-2" severity="error">{{ errorMsg }}
                     </Message>
                     <Button label="Sign Up" type="submit" class="w-full" />
-                    <router-link to="/login" class="flex justify-around pt-2">
+                    <router-link to="/auth/login" class="flex justify-around pt-2">
                         <a class="underline">Already have an account?</a>
                     </router-link>
                 </form>
@@ -75,7 +75,7 @@ const register = function () {
             password: password.value,
         }).then(() => {
             // Rediriger l'utilisateur vers la page de connexion
-            router.push({ path: '/login', query: { message: 'Registration successful. You can now login.' } });
+            router.push({ path: '/auth/login', query: { message: 'Registration successful. You can now login.' } });
         }).catch((error) => {
             // Afficher l'erreur
             console.log(error);

@@ -1,21 +1,21 @@
 <template>
-    <div v-if="!['/login', '/register'].includes(router.currentRoute.value.path)" class="border w-full bg">
+    <div v-if="!['/auth/login', '/auth/register'].includes(router.currentRoute.value.path)" class="border w-full bg">
         <nav class="flex items-center justify-between p-2 max-w-7xl m-auto">
             <router-link to="/">
                 <Logo />
             </router-link>
 
             <div v-if="isLoggedIn" class="flex gap-1">
-                <router-link to="/profile" class="flex items-center">
+                <router-link to="/users/me" class="flex items-center">
                     <Button label="Profile" icon="pi pi-user" severity="secondary"
                         :title="'connected as ' + currentUser.name" />
                 </router-link>
-                <router-link to="/login">
+                <router-link to="/auth/login">
                     <Button icon="pi pi-sign-out" iconPos="right" @click="logout"></Button>
                 </router-link>
             </div>
 
-            <router-link v-else to="/login">
+            <router-link v-else to="/auth/login">
                 <Button>Login</Button>
             </router-link>
         </nav>
