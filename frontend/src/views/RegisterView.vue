@@ -1,10 +1,13 @@
 <template>
-    <div class="flex flex-col">
-        <div class="pt-24 flex items-center justify-center">
-            <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
-                    <Logo />&nbsp;- Sign Up
-                </h2>
+    <div class="flex flex-col justify-center">
+        <div class="flex items-center justify-center">
+            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg p-8">
+                <div>
+                    <h2 class="flex justify-center text-2xl font-bold text-center">
+                        <Logo />&nbsp;- Sign Up
+                    </h2>
+                    <img src="/svg/Welcome-bro.svg" alt="Login image" class="mx-auto w-64" />
+                </div>
                 <form @submit.prevent="register">
                     <InputText id="firstName" v-model="firstName" class="w-full p-inputtext-sm mb-4"
                         placeholder="First Name" :invalid="!firstNameGood" />

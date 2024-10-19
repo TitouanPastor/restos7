@@ -6,7 +6,7 @@ import message from './presets/aura/message';
 
 // Crée une instance Axios
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // URL de base de votre API
+  baseURL: 'http://localhost:3001/api', // URL de base de votre API
 });
 
 // Intercepteur de requêtes : Ajouter le token JWT à chaque requête

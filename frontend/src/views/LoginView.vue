@@ -1,10 +1,13 @@
 <template>
-    <div class="flex flex-col">
-        <div class="pt-24 flex items-center justify-center">
-            <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <h2 class="flex justify-center text-2xl font-bold text-center mb-6">
-                    <Logo />&nbsp;- Login
-                </h2>
+    <div class="flex flex-col justify-center">
+        <div class="flex items-center justify-center">
+            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg p-8">
+                <div>
+                    <h2 class="flex justify-center text-2xl font-bold text-center">
+                        <Logo />&nbsp;- Login
+                    </h2>
+                    <img src="/svg/Hello-rafiki.svg" alt="Login image" class="mx-auto w-64"/>
+                </div>
                 <form @submit.prevent="login">
                     <InputGroup class=" mb-4">
                         <InputGroupAddon>
@@ -20,7 +23,8 @@
                     <div v-if="passwordError" class="text-red-500 text-sm mb-4">{{ emailError }}</div>
                     <Message v-if="errorMsg" class="text-red-500 text-sm mb-4 mt-2" severity="error">{{ errorMsg }}
                     </Message>
-                    <Message v-if="successMsg" class="text-green-500 text-sm mb-4 mt-2" severity="success">{{ successMsg }}</Message>
+                    <Message v-if="successMsg" class="text-green-500 text-sm mb-4 mt-2" severity="success">{{ successMsg
+                        }}</Message>
                     <Button label="Login" type="submit" class="w-full" />
                     <router-link to="/auth/register" class="flex justify-around pt-2">
                         <a class="underline">Don't have an account</a>
