@@ -3,8 +3,8 @@
         <div class="flex items-center justify-center">
             <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg p-8">
                 <div>
-                    <h2 class="flex justify-center text-2xl font-bold text-center">
-                        <Logo />&nbsp;- Sign Up
+                    <h2 class="flex justify-center text-4xl font-bold text-center">
+                        <Logo class="text-4xl" /><span>&nbsp;- Sign Up</span>
                     </h2>
                     <img src="/svg/Welcome-bro.svg" alt="Login image" class="mx-auto w-64" />
                 </div>
