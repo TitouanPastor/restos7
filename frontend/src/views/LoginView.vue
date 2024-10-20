@@ -17,7 +17,7 @@
                             placeholder="Enter your email" :invalid="!emailGood" />
                     </InputGroup>
                     <InputGroup class="mb-8">
-                        <Password id="password" v-model="password" class="w-full p-inputtext-sm rounded-l-none"
+                        <Password id="password" :feedback="false" v-model="password" class="w-full p-inputtext-sm rounded-l-none"
                             placeholder="Enter your password" toggleMask :invalid="!passwordGood" />
                     </InputGroup>
                     <div v-if="passwordError" class="text-red-500 text-sm mb-4">{{ emailError }}</div>
