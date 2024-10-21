@@ -1,8 +1,8 @@
 <template>
-    <div class="border w-full bg">
-        <header class="flex items-center justify-between p-2 max-w-7xl m-auto">
-            <h1 class="text-2xl font-bold">{{nom}}</h1>
-            <Rating v-model="note" :stars="5" readonly />
+    <div class="w-full bg">
+        <header class="flex items-center justify-between max-w-7xl">
+            <h1 class="text-xl font-bold">{{nom}}</h1>
+            <Rating v-model="note" readonly />
         </header>
     </div>
 </template>

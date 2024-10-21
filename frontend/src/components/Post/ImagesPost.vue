@@ -1,11 +1,13 @@
 <template>
-    <div class="flex justify-center my-8">
-        <Carousel :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions" :value="images">
-            <template #item>
-                <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
-                    <div class="mb-4">
-                        <div class="relative mx-auto">
-                            <img src="./test.png" alt="item.name" class="w-full rounded" />
+    <div class="flex justify-center">
+        <Carousel :numVisible="3" :numScroll="3" :responsiveOptions="responsiveOptions" :value="images" circular
+            :autoplayInterval="3000">
+            <template #item="slotProps">
+                <div>
+                    <div>
+                        <div>
+                            <Image :src="slotProps.data.image" :alt="slotProps.data.name"
+                                class="rounded-lg overflow-hidden" preview />
                         </div>
                     </div>
                 </div>
@@ -14,15 +16,16 @@
     </div>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+import { ref } from 'vue';
 import Carousel from 'primevue/carousel';
+import Image from 'primevue/image';
 
+// Données réactives pour les images et les options réactives du carousel
 const images = ref([
     { image: "/sablesOr_1.jpg", name: "sablesOr_1" },
     { image: "/sablesOr_2.jpg", name: "sablesOr_2" },
     { image: "/sablesOr_3.jpg", name: "sablesOr_3" },
-
 ]);
 
 const responsiveOptions = ref([
@@ -47,21 +50,6 @@ const responsiveOptions = ref([
         numScroll: 1
     }
 ]);
-
-
-console.log(images.value);
-
-export default {
-    components:{
-        Carousel,
-    },
-    data(){
-        return {
-            images: [],
-            responsiveOptions: []
-        };
-    }  
-};
 
 </script>
 

@@ -84,7 +84,7 @@ export default {
     indicatorButton: ({ context }) => ({
         class: [
             // Sizing & Shape
-            'w-8 h-2 rounded-md',
+            'w-4 h-2 rounded-md',
 
             // Transitions
             'transition duration-200',

@@ -3,6 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 768px) {
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    body {
+        /* -ms-overflow-style: none; */
+        /* IE and Edge */
+        /* scrollbar-width: none; */
+        /* Firefox */
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+
+}
 
 #app {
     @apply flex flex-col min-h-svh;
@@ -20,7 +37,7 @@
     --p-primary-800: #862d22;
     --p-primary-900: #69231b;
     --p-primary-950: #421511;
-    
+
     --p-surface-0: #ffffff;
     --p-surface-50: #fafafa;
     --p-surface-100: #f4f4f5;

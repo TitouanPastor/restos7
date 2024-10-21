@@ -1,12 +1,14 @@
 <template>
     <div class="flex flex-col">
-        <div class="pt-14 flex items-center justify-center">
-            <div class="w-full max-w-md bg-stone-200 shadow-lg rounded-lg py-8 px-4">
-                <Header />
-
+        <div class="flex items-center justify-center">
+            <div class="w-full max-w-md">
                 <Images />
-
-                <Footer />
+                <router-link to="/details" title="see details">
+                    <div class="px-4">
+                        <Header />
+                        <Footer />
+                    </div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -24,6 +26,4 @@ export default {
     }
 };
 </script>
-<style lang="css">
-    
-</style>
+<style lang="css"></style>
