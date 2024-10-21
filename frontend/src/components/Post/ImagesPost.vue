@@ -1,11 +1,11 @@
 <template>
     <div class="flex justify-center my-8">
-        <Carousel v-if="images" :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions">
-            <template #item="{ item }">
+        <Carousel :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions" :value="images">
+            <template #item>
                 <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
                     <div class="mb-4">
                         <div class="relative mx-auto">
-                            <img :src="item.image" :alt="item.name" class="w-full rounded" />
+                            <img src="./test.png" alt="item.name" class="w-full rounded" />
                         </div>
                     </div>
                 </div>
@@ -18,16 +18,10 @@
 import { ref } from "vue";
 import Carousel from 'primevue/carousel';
 
-export default {
-    components:{
-        Carousel
-    }
-}
-
 const images = ref([
-    { image: "../../public/sablesOr_1.jpg", name: "sablesOr_1" },
-    { image: "../../public/sablesOr_2.jpg", name: "sablesOr_2" },
-    { image: "../../public/sablesOr_3.jpg", name: "sablesOr_3" },
+    { image: "/sablesOr_1.jpg", name: "sablesOr_1" },
+    { image: "/sablesOr_2.jpg", name: "sablesOr_2" },
+    { image: "/sablesOr_3.jpg", name: "sablesOr_3" },
 
 ]);
 
@@ -56,6 +50,18 @@ const responsiveOptions = ref([
 
 
 console.log(images.value);
+
+export default {
+    components:{
+        Carousel,
+    },
+    data(){
+        return {
+            images: [],
+            responsiveOptions: []
+        };
+    }  
+};
 
 </script>
 
