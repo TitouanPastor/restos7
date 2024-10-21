@@ -1,21 +1,18 @@
-<template lang="html">
+<template>
   <div v-for="index in n" :key="index">
       <Post />
   </div>
+  <Footer />
 </template>
 
-<script>
+<script setup>
 import Post from "@/components/Post/Post.vue"
-export default {
-  name: 'HomeView',
-  components:{
-    Post
-  },
-  data(){
-    return{
-      n : 5
-    }
-  }
-}
+import Footer from '@/components/Footer.vue';
+import { ref } from 'vue';
+
+
+// Data
+const n = ref(5);
 </script>
+
 <style lang="css"></style>
