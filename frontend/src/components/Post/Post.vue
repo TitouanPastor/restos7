@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col">
         <div class="flex items-center justify-center">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-md px-7">
                 <Images />
                 <router-link to="/details" title="see details">
-                    <div class="px-4">
+                    <div >
                         <Header />
                         <Footer />
                     </div>
