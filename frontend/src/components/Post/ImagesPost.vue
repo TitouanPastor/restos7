@@ -2,7 +2,7 @@
 <template>
     <Carousel :items-to-show="1" :wrap-around="true" :breakpoints="breakpoints">
         <Slide v-for="image in images" :key="image">
-            <div class="carousel__item w-full h-full">
+            <div class="carousel__item w-full h-full px-1">
                 <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
                     :src="image.image" :alt="image.name" preview />
             </div>
@@ -11,10 +11,10 @@
         <template #addons>
             <navigation>
                 <template #next>
-                    <Button icon="pi pi-angle-right" severity="secondary" rounded class="p-0"/>
+                    <Button icon="pi pi-angle-right" severity="contrast" rounded class="w-full h-full" />
                 </template>
                 <template #prev>
-                    <Button icon="pi pi-home" aria-label="Save" />
+                    <Button icon="pi pi-angle-left" severity="contrast" rounded class="w-full h-full" />
                 </template>
             </navigation>
             <Pagination />
@@ -40,12 +40,12 @@ const images = ref([
 const breakpoints = ref({
     // 700px and up
     700: {
-        itemsToShow: 1.5,
+        itemsToShow: images.value.length > 1 ? 1.15 : 1,
         snapAlign: 'start',
     },
     // 1024 and up
     1024: {
-        itemsToShow: 1.5,
+        itemsToShow: images.value.length > 1 ? 1.25 : 1,
         snapAlign: 'start',
     },
 });
@@ -73,6 +73,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="css">
-/* Styles personnalisés si nécessaire */
-</style>
+<style lang="css"></style>
