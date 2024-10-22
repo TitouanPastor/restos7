@@ -1,34 +1,20 @@
-<!-- https://ismail9k.github.io/vue3-carousel/examples.html -->
 <template>
-    <Carousel :items-to-show="1" :wrap-around="true" :breakpoints="breakpoints">
-        <Slide v-for="image in images" :key="image">
-            <div class="carousel__item w-full h-full">
+    <!-- Carousel -->
+    <Carousel :showNavigators="showNavigators" :numVisible="1" :numScroll="1" :value="images" circular
+        :autoplayInterval="3000">
+        <template #item="slotProps">
+            <div class=" w-full h-full">
                 <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
-                    :src="image.image" :alt="image.name" preview />
+                    :src="slotProps.data.image" :alt="slotProps.data.name" preview />
             </div>
-        </Slide>
-
-        <template #addons>
-            <navigation>
-                <template #next>
-                    <Button icon="pi pi-angle-right" severity="secondary" rounded class="p-0"/>
-                </template>
-                <template #prev>
-                    <Button icon="pi pi-home" aria-label="Save" />
-                </template>
-            </navigation>
-            <Pagination />
         </template>
     </Carousel>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// import Carousel from 'primevue/carousel';
+import Carousel from 'primevue/carousel';
 import Image from 'primevue/image';
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import Button from 'primevue/button';
 
 // Données réactives pour les images et les options réactives du carousel
 const images = ref([
@@ -37,18 +23,28 @@ const images = ref([
     { image: "/sablesOr_3.jpg", name: "sablesOr_3" },
 ]);
 
-const breakpoints = ref({
-    // 700px and up
-    700: {
-        itemsToShow: 1.5,
-        snapAlign: 'start',
+const responsiveOptions = ref([
+    {
+        breakpoint: '1400px',
+        numVisible: 3,
+        numScroll: 1
     },
-    // 1024 and up
-    1024: {
-        itemsToShow: 1.5,
-        snapAlign: 'start',
+    {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1
     },
-});
+    {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 2,
+        numScroll: 1
+    }
+]);
 
 // Variable pour contrôler la visibilité des navigators
 const showNavigators = ref(false);

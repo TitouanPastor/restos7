@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
-        <div class="flex items-center justify-center">
-            <div class="w-full max-w-md px-7">
+        <div class="flex flex-grow items-center justify-center">
+            <div class="w-full max-w-md h-full px-7">
                 <Images />
                 <router-link to="/details" title="see details">
                     <div >
