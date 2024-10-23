@@ -1,130 +1,145 @@
-import { PostService } from '../services/post_service';
+import {
+    getAllPosts,
+    getPostById,
+    createPost,
+    updatePost,
+    deletePost,
+    upvotePost,
+    downvotePost,
+    getReplies,
+    getPostsByUserId,
+    getPostsByRestaurantId,
+    isPostOwner
+} from '../services/post_service.js'; // Importation des méthodes du service
 
-class PostController {
+// Middleware to check permissions
+export const isPermitted = async (req, res, next) => {
+    // Check if user is admin (if needed)
+    // Assume there's a function isAdmin() to check this
+    if (req.user?.isAdmin) return next();
 
-    constructor() {
-        this.postService = new PostService();
+    // Check if user is the post owner
+    const postId = req.params.postId;
+    const userId = req.user?.id; // Assumed from authentication middleware
+    const restaurantId = req.params.restaurantId;
+
+    if (!await isPostOwner(postId, userId, restaurantId)) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
+    next();
+};
 
-    async isPermitted(req, res) {
-        // If is an admin, then permit
-        
-
-        if (!await this.postService.isPostOwner()) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+// Get all posts
+export const getAllPostsHandler = async (req, res) => {
+    try {
+        const posts = await getAllPosts();
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async getAllPosts(req, res) {
-        try {
-            const posts = await this.postService.getAllPosts();
-            res.status(200).json(posts);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
+// Get post by ID
+export const getPostByIdHandler = async (req, res) => {
+    try {
+        const post = await getPostById(req.params.postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
         }
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async getPostById(req, res) {
-        try {
-            const post = await this.postService.getPostById(req.params.postId);
-            if (!post) {
-                return res.status(404).json({ message: 'Post not found' });
-            }
-            res.status(200).json(post);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-
+// Create a new post
+export const createPostHandler = async (req, res) => {
+    try {
+        const newPost = await createPost(req.params.restaurantId, req.params.userId, req.body.comment, req.body.Id_Post_Parent);
+        res.status(201).json(newPost);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async createPost(req, res) {
-        try {
-            const newPost = await this.postService.createPost(req.params.restaurantId, req.params.userId, req.body.comment, req.body.Id_Post_Parent);
-            res.status(201).json(newPost);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
+// Update a post
+export const updatePostHandler = async (req, res) => {
+    try {
+        const updatedPost = await updatePost(req.params.postId, req.params.restaurantId, req.body.comment);
+        if (!updatedPost) {
+            return res.status(404).json({ message: 'Post not found' });
         }
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async updatePost(req, res) {
-        try {
-            const updatedPost = await this.postService.updatePost(req.params.postId, req.params.restaurantId, req.comment);
-            if (!updatedPost) {
-                return res.status(404).json({ message: 'Post not found' });
-            }
-            res.status(200).json(updatedPost);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
+// Delete a post
+export const deletePostHandler = async (req, res) => {
+    try {
+        const deletedPost = await deletePost(req.params.postId, req.params.restaurantId);
+        if (!deletedPost) {
+            return res.status(404).json({ message: 'Post not found' });
         }
+        res.status(200).json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async deletePost(req, res) {
-        if (!await this.postService.isPostOwner()) {
-            return res.status(401).json({ message: 'Unauthorized' });
+// Upvote a post
+export const upvotePostHandler = async (req, res) => {
+    try {
+        const updatedPost = await upvotePost(req.params.postId, req.params.restaurantId);
+        if (!updatedPost) {
+            return res.status(404).json({ message: 'Post not found' });
         }
-
-        try {
-            const deletedPost = await this.postService.deletePost(req.params.postId, req.params.restaurantId);
-            if (!deletedPost) {
-                return res.status(404).json({ message: 'Post not found' });
-            }
-            res.status(200).json({ message: 'Post deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async upvotePost(req, res) {
-        try {
-            const updatedPost = await this.postService.upvotePost(req.params.postId, req.params.restaurantId);
-            if (!updatedPost) {
-                return res.status(404).json({ message: 'Post not found' });
-            }
-            res.status(200).json(updatedPost);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
+// Downvote a post
+export const downvotePostHandler = async (req, res) => {
+    try {
+        const updatedPost = await downvotePost(req.params.postId, req.params.restaurantId);
+        if (!updatedPost) {
+            return res.status(404).json({ message: 'Post not found' });
         }
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async downvotePost(req, res) {
-        try {
-            const updatedPost = await this.postService.downvotePost(req.params.postId, req.params.restaurantId);
-            if (!updatedPost) {
-                return res.status(404).json({ message: 'Post not found' });
-            }
-            res.status(200).json(updatedPost);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+// Get replies to a post
+export const getRepliesHandler = async (req, res) => {
+    try {
+        const replies = await getReplies(req.params.postId, req.params.restaurantId);
+        res.status(200).json(replies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async getReplies(req, res) {
-        try {
-            const replies = await this.postService.getReplies(req.params.postId, req.params.restaurantId);
-            res.status(200).json(replies);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+// Get posts by user ID
+export const getPostsByUserIdHandler = async (req, res) => {
+    try {
+        const posts = await getPostsByUserId(req.params.id);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    async getPostsByUserId(req, res) {
-        try {
-            const posts = await this.postService.getPostsByUserId(req.params.id);
-            res.status(200).json(posts);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+// Get posts by restaurant ID
+export const getPostsByRestaurantIdHandler = async (req, res) => {
+    try {
+        const posts = await getPostsByRestaurantId(req.params.restaurantId);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-
-    async getPostsByRestaurantId(req, res) {
-        try {
-            const posts = await this.postService.getPostsByRestaurantId(req.params.restaurantId);
-            res.status(200).json(posts);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-
-}
-
-module.exports = PostController;
+};

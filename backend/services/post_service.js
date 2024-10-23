@@ -1,120 +1,125 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
-class PostService {
+const prisma = new PrismaClient();
 
-    constructor() {
-        this.prisma = new PrismaClient();
-    }
+// Récupérer tous les posts
+export const getAllPosts = async () => {
+    return prisma.post.findMany();
+};
 
-    async getAllPosts() {
-        return this.prisma.post.findMany();
-    }
+// Récupérer un post par ID
+export const getPostById = async (postId) => {
+    return prisma.post.findUnique({
+        where: {
+            id: parseInt(postId),
+        },
+    });
+};
 
-    async getPostById(postId) {
-        return this.prisma.post.findUnique({
-            where: {
-                id: parseInt(postId)
-            }
-        });
-    }
+// Créer un post
+export const createPost = async (Id_Restaurant, Id_User, comment, Id_Post_Parent) => {
+    return prisma.post.create({
+        data: {
+            Id_Restaurant: parseInt(Id_Restaurant),
+            Id_User: parseInt(Id_User),
+            comment,
+            Id_Post_Parent,
+        },
+    });
+};
 
-    async createPost(Id_Restaurant, Id_User, comment, Id_Post_Parent) {
-        return this.prisma.post.create({
-            data: {
-                Id_Restaurant: parseInt(Id_Restaurant),
-                Id_User: parseInt(Id_User),
-                comment: comment,
-                Id_Post_Parent: Id_Post_Parent
-        });
-    }
+// Mettre à jour un post
+export const updatePost = async (postId, restaurantId, comment) => {
+    return prisma.post.update({
+        where: {
+            Id_Post: parseInt(postId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+        data: {
+            comment,
+        },
+    });
+};
 
-    async updatePost(postId, restaurantId, comment) {
-        return this.prisma.post.update({
-            where: {
-                Id_Post: parseInt(postId),
-                Id_Restaurant: parseInt(restaurantId)
+// Supprimer un post
+export const deletePost = async (postId, restaurantId) => {
+    return prisma.post.delete({
+        where: {
+            Id_Post: parseInt(postId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+    });
+};
+
+// Upvoter un post
+export const upvotePost = async (postId, restaurantId) => {
+    return prisma.post.update({
+        where: {
+            Id_Post: parseInt(postId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+        data: {
+            upvotes: {
+                increment: 1,
             },
-            data: {
-                comment: comment
-            }
-        });
-    }
+        },
+    });
+};
 
-    async deletePost(postId, restaurantId) {
-        return this.prisma.post.delete({
-            where: {
-                Id_Post: parseInt(postId),
-                Id_Restaurant: parseInt(restaurantId)
-            }
-        });
-    }
-
-    async upvotePost(postId, restaurantId) {
-        return this.prisma.post.update({
-            where: {
-                Id_Post: parseInt(postId),
-                Id_Restaurant: parseInt(restaurantId)
+// Downvoter un post
+export const downvotePost = async (postId, restaurantId) => {
+    return prisma.post.update({
+        where: {
+            Id_Post: parseInt(postId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+        data: {
+            downvotes: {
+                increment: 1,
             },
-            data: {
-                upvotes: {
-                    increment: 1
-                }
-            }
-        });
-    }
+        },
+    });
+};
 
-    async downvotePost(postId, restaurantId) {
-        return this.prisma.post.update({
-            where: {
-                Id_Post: parseInt(postId),
-                Id_Restaurant: parseInt(restaurantId)
-            },
-            data: {
-                downvotes: {
-                    increment: 1
-                }
-            }
-        });
-    }
+// Récupérer les réponses à un post
+export const getReplies = async (postId, restaurantId) => {
+    return prisma.post.findMany({
+        include: {
+            replies: true,
+        },
+        where: {
+            Id_Post: parseInt(postId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+    });
+};
 
-    async getReplies(postId, restaurantId) {
-        return this.prisma.post.findMany({
-            include: {
-                replies: true
-            },
-            where: {
-                Id_Post: parseInt(postId),
-                Id_Restaurant: parseInt(restaurantId)
-            }
-        });
-    }
+// Récupérer les posts d'un utilisateur
+export const getPostsByUserId = async (userId) => {
+    return prisma.post.findMany({
+        where: {
+            Id_User: parseInt(userId),
+        },
+    });
+};
 
-    async getPostsByUserId(userId) {
-        return this.prisma.post.findMany({
-            where: {
-                userId: parseInt(userId)
-            }
-        });
-    }
+// Récupérer les posts d'un restaurant
+export const getPostsByRestaurantId = async (restaurantId) => {
+    return prisma.post.findMany({
+        where: {
+            Id_Restaurant: parseInt(restaurantId),
+        },
+    });
+};
 
-    async getPostsByRestaurantId (restaurantId) {
-        return this.prisma.post.findMany({
-            where: {
-                restaurantId: parseInt(restaurantId)
-            }
-        });
-    }
-
-    async isPostOwner(postId, userId, restaurantId) {
-        const post = await this.prisma.post.findUnique({
-            where: {
-                Id_Post: parseInt(postId),
-                Id_User: parseInt(userId),
-                Id_Restaurant: parseInt(restaurantId)
-            }
-        });
-        return post !== null;
-    }
-}
-
-module.exports = new PostService();
+// Vérifier si un utilisateur est propriétaire du post
+export const isPostOwner = async (postId, userId, restaurantId) => {
+    const post = await prisma.post.findUnique({
+        where: {
+            Id_Post: parseInt(postId),
+            Id_User: parseInt(userId),
+            Id_Restaurant: parseInt(restaurantId),
+        },
+    });
+    return post !== null;
+};

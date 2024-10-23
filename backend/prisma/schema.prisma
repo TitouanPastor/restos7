@@ -21,9 +21,9 @@ model Country {
 }
 
 model Permission {
-  Id_Permission Int    @id @default(autoincrement())
-  name          String
-  user          User[]
+  Id_Permission   Int                @id @default(autoincrement())
+  name            String
+  userPermissions PermissionToUser[]
 }
 
 model Photo {
@@ -77,16 +77,25 @@ model Note {
 }
 
 model User {
-  Id_User     Int          @id @default(autoincrement()) @map("Id_Person")
-  name        String
-  firstname   String
-  Id_Photo    Int?
-  email       String       @unique
-  password    String
-  photo       Photo?       @relation(fields: [Id_Photo], references: [Id_Photo]) // Relation optionnelle
-  posts       Post[]
-  notes       Note[]
-  permissions Permission[]
+  Id_User         Int                @id @default(autoincrement()) @map("Id_Person")
+  name            String
+  firstname       String
+  Id_Photo        Int?
+  email           String             @unique
+  password        String
+  photo           Photo?             @relation(fields: [Id_Photo], references: [Id_Photo]) // Relation optionnelle
+  posts           Post[]
+  notes           Note[]
+  userPermissions PermissionToUser[]
 
   @@map("Person")
+}
+
+model PermissionToUser {
+  Id_Person     Int
+  Id_Permission Int
+  user          User       @relation(fields: [Id_Person], references: [Id_User])
+  permission    Permission @relation(fields: [Id_Permission], references: [Id_Permission])
+
+  @@unique([Id_Person, Id_Permission]) // Pour éviter les doublons
 }

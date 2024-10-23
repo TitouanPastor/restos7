@@ -1,17 +1,19 @@
 <template>
     <div class="flex flex-col justify-center">
         <div class="flex items-center justify-center">
-            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg px-8">
-                <!-- Bouton de retour -->
-                <router-link to="/">
-                    <div class="flex justify-start">
-                        <Button icon="pi pi-arrow-left" @click="goBack" />
-                    </div>
-                </router-link>
+            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg p-8">
                 <div>
-                    <h2 class="flex justify-center text-4xl font-bold text-center">
-                        <Logo class="text-4xl" /><span>&nbsp;- Sign Up</span>
-                    </h2>
+                    <div class="flex w-full justify-between">
+                        <!-- Bouton de retour -->
+                        <router-link to="/">
+                            <div class="flex justify-start">
+                                <Button icon="pi pi-arrow-left" @click="goBack" />
+                            </div>
+                        </router-link>
+                        <!-- <h2 class="flex justify-center text-4xl font-bold text-center">
+                            <Logo class="text-4xl" /><span>&nbsp;- Sign Up</span>
+                        </h2> -->
+                    </div>
                     <img src="/svg/Welcome-bro.svg" alt="Login image" class="mx-auto w-64" />
                 </div>
                 <form @submit.prevent="register">
