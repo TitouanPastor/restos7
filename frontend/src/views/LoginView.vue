@@ -1,12 +1,18 @@
 <template>
     <div class="flex flex-col justify-center">
         <div class="flex items-center justify-center">
-            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg p-8">
+            <div class="flex flex-col gap-10 w-full max-w-lg rounded-lg px-8">
+                <!-- Bouton de retour -->
+                <router-link to="/">
+                    <div class="flex justify-start">
+                        <Button icon="pi pi-arrow-left" @click="goBack"/>
+                    </div>
+                </router-link>
                 <div>
                     <h2 class="flex justify-center text-4xl font-bold text-center">
                         <Logo class="text-4xl" /><span>&nbsp;- Login</span>
                     </h2>
-                    <img src="/svg/Hello-rafiki.svg" alt="Login image" class="mx-auto w-64"/>
+                    <img src="/svg/Hello-rafiki.svg" alt="Login image" class="mx-auto w-64" />
                 </div>
                 <form @submit.prevent="login">
                     <InputGroup class=" mb-4">
@@ -17,8 +23,9 @@
                             placeholder="Enter your email" :invalid="!emailGood" />
                     </InputGroup>
                     <InputGroup class="mb-8">
-                        <Password id="password" :feedback="false" v-model="password" class="w-full p-inputtext-sm rounded-l-none"
-                            placeholder="Enter your password" toggleMask :invalid="!passwordGood" />
+                        <Password id="password" :feedback="false" v-model="password"
+                            class="w-full p-inputtext-sm rounded-l-none" placeholder="Enter your password" toggleMask
+                            :invalid="!passwordGood" />
                     </InputGroup>
                     <div v-if="passwordError" class="text-red-500 text-sm mb-4">{{ emailError }}</div>
                     <Message v-if="errorMsg" class="text-red-500 text-sm mb-4 mt-2" severity="error">{{ errorMsg }}
@@ -60,9 +67,9 @@ const successMsg = ref('');
 // Utiliser Vuex store
 const store = useStore();
 
-// Methods
+// Méthode pour déconnecter l'utilisateur
 const login = async function () {
-    // restet the success message if any
+    // Reset the success message if any
     successMsg.value = '';
     // Reset validation indicators
     emailGood.value = isValidEmail(email.value);
