@@ -3,7 +3,9 @@ import {
     getRestaurantById,
     createRestaurant,
     updateRestaurant,
-    deleteRestaurant
+    deleteRestaurant,
+    addPhoto,
+    addRestaurantPhotoLink
 } from '../services/restaurant_service.js';
 
 // Obtenir tous les restaurants
@@ -32,12 +34,40 @@ export async function getRestaurantByIdHandler(req, res) {
 // Créer un nouveau restaurant
 export async function createRestaurantHandler(req, res) {
     try {
+        // Créer le nouveau restaurant
         const newRestaurant = await createRestaurant(req.body);
-        res.status(201).json(newRestaurant);
+
+        // Si des fichiers sont uploadés, on les ajoute dans la table Photo
+        if (req.files && req.files.length > 0) {
+            const photoPromises = req.files.map(async (file) => {
+                // Ajouter la photo dans la table "Photo"
+                const newPhoto = await addPhoto({
+                    url: `/static/uploads/${file.filename}`,  // URL du fichier dans le dossier public
+                    alt: file.originalname  // Nom original du fichier
+                });
+
+                // Créer une liaison dans la table "Have" entre le restaurant et la photo
+                await addRestaurantPhotoLink({
+                    Id_Restaurant: newRestaurant.Id_Restaurant,
+                    Id_Photo: newPhoto.Id_Photo
+                });
+            });
+
+            await Promise.all(photoPromises);  // Attendre que toutes les photos soient ajoutées
+        }
+
+        // Retourner le restaurant créé avec éventuellement ses photos
+        const restaurantWithPhotos = await getRestaurantById(newRestaurant.Id_Restaurant);
+        res.status(201).json(restaurantWithPhotos);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }
+
+
+
+
 
 // Mettre à jour un restaurant existant
 export async function updateRestaurantHandler(req, res) {

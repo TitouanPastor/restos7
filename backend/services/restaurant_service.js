@@ -19,14 +19,20 @@ export async function getRestaurantById(restaurantId) {
         },
         include: {
             country: true,
-            photos: true,
             posts: true,
-            notes: true
+            notes: true,
+            // Récupérer les photos via la table de jonction "Have"
+            photos: {
+                include: {
+                    photo: true  // Récupère les informations de la table "Photo" via la relation "Have"
+                }
+            }
         }
     });
 }
 
-// Créer un nouveau restaurant
+
+
 export async function createRestaurant(data) {
     return prisma.restaurant.create({
         data: {
@@ -36,10 +42,33 @@ export async function createRestaurant(data) {
             address: data.address,
             description: data.description,
             website: data.website,
-            Id_Country: parseInt(data.Id_Country)
+            Id_Country: parseInt(data.Id_Country),
         }
     });
 }
+
+
+// Ajouter une nouvelle photo dans la table "Photo"
+export async function addPhoto(data) {
+    console.log(data);
+    return prisma.photo.create({
+        data: {
+            url: data.url,
+            alt: data.alt,
+        },
+    });
+}
+
+// Créer une liaison entre un restaurant et une photo dans la table "Have"
+export async function addRestaurantPhotoLink(data) {
+    await prisma.have.create({
+        data: {
+            Id_Restaurant: data.Id_Restaurant,
+            Id_Photo: data.Id_Photo,
+        },
+    });
+}
+
 
 // Mettre à jour un restaurant existant
 export async function updateRestaurant(restaurantId, data) {

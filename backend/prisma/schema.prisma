@@ -26,14 +26,6 @@ model Permission {
   userPermissions PermissionToUser[]
 }
 
-model Photo {
-  Id_Photo   Int          @id @default(autoincrement())
-  url        String
-  alt        String
-  person     User[]
-  restaurant Restaurant[]
-}
-
 model Restaurant {
   Id_Restaurant Int     @id @default(autoincrement())
   name          String
@@ -46,7 +38,24 @@ model Restaurant {
   country       Country @relation(fields: [Id_Country], references: [Id_Country])
   posts         Post[]
   notes         Note[]
-  photos        Photo[]
+  photos        Have[]
+}
+
+model Photo {
+  Id_Photo   Int          @id @default(autoincrement())
+  url        String
+  alt        String
+  person     User[]
+  restaurant Have[]       // Une photo peut appartenir à plusieurs restaurants via Have
+}
+
+model Have {
+  Id_Restaurant Int
+  Id_Photo      Int
+  restaurant    Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
+  photo         Photo      @relation(fields: [Id_Photo], references: [Id_Photo])
+
+  @@id([Id_Restaurant, Id_Photo])
 }
 
 model Post {

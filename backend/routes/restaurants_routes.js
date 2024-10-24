@@ -13,6 +13,7 @@ import { getAllRestaurantsHandler, getRestaurantByIdHandler, createRestaurantHan
 
 import authMiddleware from '../middlewares/auth_middleware.js';
 import permissionMiddleware from '../middlewares/permissions_middleware.js';
+import upload from '../middlewares/upload_middleware.js';
 
 const router = express.Router();
 
@@ -27,7 +28,12 @@ router.get('/:id', (req, res) => {
 });
 
 // Post a new restaurant
-router.post('/', authMiddleware, permissionMiddleware(["creator","administrator"]), createRestaurantHandler);
+router.post('/',
+    authMiddleware,
+    permissionMiddleware(["creator", "administrator"]),
+    upload.array('photos', 5),  // Autorise jusqu'à 5 photos
+    createRestaurantHandler
+);
 
 router.put('/:id', (req, res) => {
     const restaurantId = req.params.id;
