@@ -29,6 +29,13 @@ const loginUser = async (email, password) => {
     // Recherche de l'utilisateur par email
     const user = await prisma.user.findUnique({
         where: { email },
+        include: {
+            userPermissions: {
+                include: {
+                    permission: true,
+                }
+            }
+        }, // Inclure les permissions de l'utilisateur
     });
 
     // Vérification de l'existence de l'utilisateur
@@ -49,7 +56,10 @@ const loginUser = async (email, password) => {
         { expiresIn: '1h' }
     );
 
-    return { token, user };
+    // Exclure le mot de passe de l'objet utilisateur
+    const { password: _, ...userWithoutPassword } = user;
+
+    return { token, user: userWithoutPassword };
 };
 
 

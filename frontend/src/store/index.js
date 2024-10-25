@@ -37,6 +37,13 @@ export default createStore({
         },
         currentUser(state) {
             return state.user;
-        }
+        },
+        isAdmin(state) {
+            console.log(state.user);
+            return state.user && state.user.userPermissions.some(perm => perm.permission.name === 'administrator');
+        },
+        isCreator(state) {
+            return state.user && state.user.userPermissions.some(perm => perm.permission.name === 'creator');
+        },
     },
 });

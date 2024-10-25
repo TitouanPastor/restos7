@@ -24,6 +24,10 @@
                         <Button label="Profile" icon="pi pi-user" severity="secondary"
                             :title="'Connected as ' + currentUser.name" />
                     </router-link>
+                    <!-- create restaurant ("+") btn -->
+                    <router-link v-if="isAbleToCreate" to="/restaurants/create">
+                        <Button icon="pi pi-plus" class="p-button-success"></Button>
+                    </router-link>
                     <!-- Logout Button -->
                     <Button icon="pi pi-sign-out" iconPos="right" @click="logout" class="p-button-danger"></Button>
                 </div>
@@ -51,6 +55,7 @@ import router from '@/router';
 const store = useStore();
 const isLoggedIn = computed(() => store.getters.isLoggedIn);
 const currentUser = computed(() => store.getters.currentUser);
+const isAbleToCreate = computed(() => store.getters.isAdmin || store.getters.isCreator);
 
 // Barre de recherche
 const searchQuery = ref(''); // Référence pour la barre de recherche

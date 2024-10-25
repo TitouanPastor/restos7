@@ -10,6 +10,11 @@ const getUserPersonnalInfo = async (userId) => {
                 name: true,
                 firstname: true,
                 email: true,
+                userPermissions: {
+                    include: {
+                        permission: true,
+                    },
+                }, // Include permissions in the selection
             },
         });
         // TODO : if there is an image, get the link to the image
