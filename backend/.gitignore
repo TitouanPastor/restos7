@@ -34,4 +34,4 @@ npm-debug.log
 .env
 
 # static upload files
-public/uploads
+# public/uploads
