@@ -6,7 +6,11 @@ export async function getAllRestaurants() {
     return prisma.restaurant.findMany({
         include: {
             country: true, // Inclure la relation avec le pays
-            photos: true   // Inclure les photos du restaurant
+            photos: {
+                include: {
+                    photo: true  // Récupère les informations de la table "Photo" via la relation "Have"
+                }
+            }
         }
     });
 }

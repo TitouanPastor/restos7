@@ -1,15 +1,15 @@
 <!-- https://ismail9k.github.io/vue3-carousel/examples.html -->
 <template>
     <Carousel :items-to-show="1" :wrap-around="true" :breakpoints="breakpoints">
-        <Slide v-for="image in images" :key="image">
-            <div class="carousel__item w-full h-full px-1">
+        <Slide v-for="image in images" :key="image.photo.Id_Photo">
+            <div class="carousel__item w-full h-56 px-1">
                 <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
-                    :src="image.image" :alt="image.name" preview />
+                    :src="'http://localhost:3001' + image.photo.url" :alt="image.photo.alt" preview />
             </div>
         </Slide>
 
         <template #addons>
-            <navigation>
+            <navigation v-if="showNavigators">
                 <template #next>
                     <Button icon="pi pi-angle-right" severity="contrast" rounded class="w-full h-full" />
                 </template>
@@ -23,19 +23,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-// import Carousel from 'primevue/carousel';
+import { ref, onMounted, defineProps } from 'vue';
 import Image from 'primevue/image';
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import Button from 'primevue/button';
 
 // Données réactives pour les images et les options réactives du carousel
-const images = ref([
-    { image: "/sablesOr_1.jpg", name: "sablesOr_1" },
-    { image: "/sablesOr_2.jpg", name: "sablesOr_2" },
-    { image: "/sablesOr_3.jpg", name: "sablesOr_3" },
-]);
+const props = defineProps(
+    {
+        images: {
+            type: Array,
+            default: () => [],
+        },
+    }
+);
+
+const images = ref(props.images);
 
 const breakpoints = ref({
     // 700px and up

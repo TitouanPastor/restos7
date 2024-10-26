@@ -19,7 +19,7 @@ const router = express.Router();
 
 /* ************* RESTAURANT ROUTES ************* */
 router.get('/', (req, res) => {
-    throw new NotImplementedError(); // Tu pourras implémenter ces routes plus tard
+    getAllRestaurantsHandler(req, res);
 });
 
 router.get('/:id', (req, res) => {

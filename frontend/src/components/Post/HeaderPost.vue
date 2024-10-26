@@ -1,25 +1,21 @@
 <template>
     <div class="w-full bg">
         <header class="flex items-center justify-between max-w-7xl">
-            <h1 class="text-xl font-bold">{{nom}}</h1>
-            <Rating v-model="note" readonly />
+            <h1 class="text-xl font-bold">{{ name }}</h1>
+            <!-- Utilisation de :model-value et @update:model-value pour la note -->
+            <Rating :model-value="note" readonly />
         </header>
     </div>
 </template>
-<script>
+
+<script setup>
+import { defineProps } from 'vue';
 import Rating from 'primevue/rating';
-export default {
-    components: {
-        Rating,
-    },
-    data() {
-        return {
-            nom: "Les sables d'OR", //Nom à récupérer dans la BDD
-            note: 3  // Note à récupérer dans la BDD
-        };
-    }
-};
+
+const props = defineProps({
+    name: String,
+    note: Number,
+});
 </script>
-<style lang="css">
-    
-</style>
+
+<style lang="css"></style>
