@@ -31,7 +31,7 @@ router.get('/:id', (req, res) => {
 router.post('/',
     authMiddleware,
     permissionMiddleware(["creator", "administrator"]),
-    upload.array('photos', 5),  // Autorise jusqu'à 5 photos
+    upload.array('photos', 10),  // Autorise jusqu'à 5 photos
     createRestaurantHandler
 );
 

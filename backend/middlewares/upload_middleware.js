@@ -6,6 +6,7 @@ const storage = multer.diskStorage({
         cb(null, 'public/uploads'); // Dossier où les fichiers seront stockés
     },
     filename: function (req, file, cb) {
+        console.log(file);
         cb(null, `${Date.now()}-${file.originalname}`); // Renommer le fichier pour éviter les collisions
     }
 });
