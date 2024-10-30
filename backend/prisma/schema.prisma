@@ -36,17 +36,17 @@ model Restaurant {
   website       String
   Id_Country    Int
   country       Country @relation(fields: [Id_Country], references: [Id_Country])
-  posts         Post[]
+  posts         Post[] // La relation vers les posts liés
   notes         Note[]
   photos        Have[]
 }
 
 model Photo {
-  Id_Photo   Int          @id @default(autoincrement())
+  Id_Photo   Int    @id @default(autoincrement())
   url        String
   alt        String
   person     User[]
-  restaurant Have[]       // Une photo peut appartenir à plusieurs restaurants via Have
+  restaurant Have[] // Une photo peut appartenir à plusieurs restaurants via Have
 }
 
 model Have {
@@ -68,7 +68,7 @@ model Post {
   Id_Post_Parent Int?
   user           User       @relation(fields: [Id_User], references: [Id_User])
   restaurant     Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
-  parent         Post?      @relation("postReplies", references: [Id_Post, Id_Restaurant], fields: [Id_Post_Parent, Id_Restaurant], onDelete: NoAction, onUpdate: NoAction)
+  parent         Post?      @relation("postReplies", fields: [Id_Post_Parent, Id_Restaurant], references: [Id_Post, Id_Restaurant], onDelete: NoAction, onUpdate: NoAction)
   replies        Post[]     @relation("postReplies")
 
   @@id([Id_Post, Id_Restaurant])
@@ -78,7 +78,7 @@ model Note {
   Id_User       Int        @map("Id_Person")
   Id_Restaurant Int
   score         String
-  comment       String
+  comment       String?
   user          User       @relation(fields: [Id_User], references: [Id_User])
   restaurant    Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
 

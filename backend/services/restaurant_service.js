@@ -17,6 +17,7 @@ export async function getAllRestaurants() {
 
 // Obtenir un restaurant par son ID
 export async function getRestaurantById(restaurantId) {
+    console.log(restaurantId);
     return prisma.restaurant.findUnique({
         where: {
             Id_Restaurant: parseInt(restaurantId)
