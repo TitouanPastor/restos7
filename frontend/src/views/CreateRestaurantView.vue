@@ -9,7 +9,10 @@
             <InputText v-model="restaurant.address" placeholder="Address" />
             <Textarea v-model="restaurant.description" placeholder="Description" rows="5" />
             <InputText v-model="restaurant.website" placeholder="Website" />
-            <InputText v-model="restaurant.Id_Country" placeholder="Country ID (To change)" type="number" />
+
+            <!-- AutoComplete pour la sélection du pays -->
+            <AutoComplete class="flex" inputClass="w-full" v-model="selectedCountry" :suggestions="filteredCountries" @complete="searchCountries"
+                optionLabel="name" placeholder="Country" dropdown/>
 
             <FileUpload name="photos" multiple accept="image/*" class="mb-4" file-limit="10"
                 invalid-file-limit-message="Up to 10 images can be added." customUpload="true" :showUploadButton="false"
@@ -18,7 +21,6 @@
                     <span class="hidden md:block">Drag and drop files to here to upload.</span>
                 </template>
             </FileUpload>
-
 
             <div v-if="errorMessage" class="mt-2">
                 <Message severity="error">
@@ -38,13 +40,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Toast from 'primevue/toast';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Button from 'primevue/button';
 import FileUpload from 'primevue/fileupload';
 import Message from 'primevue/message';
+import AutoComplete from 'primevue/autocomplete';
 import api from '@/axios';
 
 const restaurant = ref({
@@ -57,17 +60,20 @@ const restaurant = ref({
     Id_Country: null,
     photos: []
 });
+
+const selectedCountry = ref(null);
 const errorMessage = ref('');
 const successMessage = ref('');
 const toast = ref(null);
 const uploadUrl = '/restaurants';
+const countries = ref([]);
+const filteredCountries = ref([]);
 
 const submitForm = async () => {
     errorMessage.value = '';
 
     if (!restaurant.value.name || !restaurant.value.city || !restaurant.value.address || !restaurant.value.postal_code || !restaurant.value.Id_Country || !restaurant.value.photos.length || !restaurant.value.description) {
         errorMessage.value = 'You must fill all fields.';
-        console.error('Missing required fields');
         return;
     }
 
@@ -101,16 +107,40 @@ const submitForm = async () => {
             Id_Country: null,
             photos: []
         };
+        selectedCountry.value = null;
     } catch (error) {
         errorMessage.value = 'Failed to create restaurant. Try again later.';
     }
 };
 
 const handleFileSelect = (event) => {
-    // Ajouter les fichiers sélectionnés au tableau `restaurant.value.photos`
     restaurant.value.photos = event.files;
 };
 
+const searchCountries = (event) => {
+    filteredCountries.value = countries.value.filter((country) =>
+        country.name.toLowerCase().includes(event.query.toLowerCase())
+    );
+};
+
+const getCountries = async () => {
+    try {
+        const response = await api.get('/misc/countries');
+        countries.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch countries');
+    }
+};
+
+onMounted(() => {
+    getCountries();
+});
+
+// Watch pour mettre à jour Id_Country avec l'ID du pays sélectionné
+watch(selectedCountry, (newCountry) => {
+    restaurant.value.Id_Country = newCountry ? newCountry.Id_Country : null;
+    console.log(restaurant.value.Id_Country);
+});
 </script>
 
 <style scoped>
