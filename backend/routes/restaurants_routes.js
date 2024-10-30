@@ -23,8 +23,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    const restaurantId = req.params.id;
-    throw new NotImplementedError();
+    getRestaurantByIdHandler(req, res);
 });
 
 // Post a new restaurant
