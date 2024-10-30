@@ -65,7 +65,7 @@ const uploadUrl = '/restaurants';
 const submitForm = async () => {
     errorMessage.value = '';
 
-    if (!restaurant.value.name || !restaurant.value.city || !restaurant.value.address || !restaurant.value.postal_code || !restaurant.value.Id_Country || !restaurant.value.photos.length || !restaurant.value.description || !restaurant.value.website) {
+    if (!restaurant.value.name || !restaurant.value.city || !restaurant.value.address || !restaurant.value.postal_code || !restaurant.value.Id_Country || !restaurant.value.photos.length || !restaurant.value.description) {
         errorMessage.value = 'You must fill all fields.';
         console.error('Missing required fields');
         return;
