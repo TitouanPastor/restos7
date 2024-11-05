@@ -5,7 +5,7 @@
                 <HeaderPost :name="name" :note="3" />
                 <p>
                     {{ avis }}
-                </p>
+                </p> 
             </div>
         </div>
     </div>
