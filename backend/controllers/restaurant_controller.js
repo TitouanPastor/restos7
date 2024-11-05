@@ -10,6 +10,8 @@ import {
 
 import axios from 'axios';
 
+import { stringSimilarity } from "string-similarity-js";
+
 // Obtenir tous les restaurants
 export async function getAllRestaurantsHandler(req, res) {
     try {
@@ -28,6 +30,31 @@ export async function getRestaurantByIdHandler(req, res) {
             return res.status(404).json({ message: 'Restaurant not found' });
         }
         res.status(200).json(restaurant);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getRestaurantByNameHandler(req, res) {
+    try {
+        const restaurant = await getAllRestaurants();
+        // Trouver un pourcentage de similarité entre le nom du restaurant et le nom recherché
+        const similarity = restaurant.map((r) => {
+            const similarity = stringSimilarity(r.name, req.params.name, 1);
+            return { ...r, similarity };
+        });
+
+        // Trier les restaurants par similarité
+        const sortedRestaurants = similarity.sort((a, b) => b.similarity - a.similarity);
+
+        // Si le premier restaurant a une similarité inférieure à 0.7, on ne retourne que le premier
+        /*if (sortedRestaurants[0].similarity < 0.7) {
+            return res.status(200).json([sortedRestaurants[0]]);
+        }*/
+
+        // Retourner les restaurants avec un score de similarité supérieur à 0.7
+        const filteredRestaurants = sortedRestaurants.filter((r) => r.similarity > 0.2);
+        res.status(200).json(filteredRestaurants);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

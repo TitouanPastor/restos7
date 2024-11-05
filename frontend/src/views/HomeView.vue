@@ -6,6 +6,9 @@
       <div v-for="restaurant in posts" :key="restaurant.Id_Restaurant" class="flex justify-center">
         <Post :restaurant="restaurant" />
       </div>
+      <div v-if="posts.length === 0" class="flex justify-center">
+        <p class="text-2xl text-gray-500">No restaurants found</p>
+      </div>
     </div>
     <LeafletMap v-if="showMap" class="z-0 flex flex-grow" />
   </main>
@@ -15,9 +18,10 @@
 <script setup>
 import Post from "@/components/Post/Post.vue";
 import Footer from '@/components/Footer.vue';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import LeafletMap from "@/components/LeafletMap.vue";
 import api from '@/axios';
+import { useRoute } from 'vue-router';
 
 const posts = ref([]);
 const showMap = ref(false);
@@ -38,13 +42,39 @@ function toggleView(view) {
     showMap.value = false;
   }
 }
+const route = useRoute()
+watch(
+  () => route.params.query,
+  async (query) => {
+    try {
+      if (query == null || query == '') {
+        const response = await api.get('/restaurants/');
+        posts.value = response.data;
+        console.log('Restaurants loaded:', posts.value);
+      } else {
+        const response = await api.get('/restaurants/search/' + query);
+        posts.value = response.data;
+        console.log('Restaurants loaded:', posts.value);
+      }
+    } catch (error) {
+      console.error("Failed to load restaurants:", error);
+    }
+  }
+)
 
 // Fetching data on mounted
 onMounted(async () => {
   try {
-    const response = await api.get('/restaurants/');
-    posts.value = response.data;
-    console.log('Restaurants loaded:', posts.value);
+    
+    if (route.params.query == null || route.params.query == '') {
+      const response = await api.get('/restaurants/');
+      posts.value = response.data;
+      console.log('Restaurants loaded:', posts.value);
+    } else {
+      const response = await api.get('/restaurants/search/' + route.params.query);
+      posts.value = response.data;
+      console.log('Restaurants loaded:', posts.value);
+    }
   } catch (error) {
     console.error("Failed to load restaurants:", error);
   }
