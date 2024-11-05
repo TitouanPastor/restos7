@@ -1,6 +1,6 @@
 <template>
     <div v-if="!['/auth/login', '/auth/register'].includes(router.currentRoute.value.path)" class="border w-full bg">
-        <nav class="flex items-center justify-between p-2 max-w-7xl m-auto w-full">
+        <nav class="flex items-center justify-between p-2 max-w-7xl m-auto w-full z-50">
             <router-link to="/">
                 <Logo />
             </router-link>
