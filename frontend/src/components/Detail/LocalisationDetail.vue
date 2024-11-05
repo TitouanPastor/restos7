@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <main class="">
         <l-map ref="map" v-model:zoom="zoom" v-model:center="center" :useGlobalLeaflet="false">
             <l-tile-layer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                       layer-type="base"
@@ -22,12 +22,21 @@
   
 <style>
     html, body {
-    margin: 0;
-    padding: 0;
+        margin: 0;
+        padding: 0;
     }
 
     main {
-    height: 100vh;
-    width: 100vw;
+        height: 50vh;
+        width: 50vw;
     }
+
+    /*
+    .map-container {
+
+        margin: 20px;
+        width: 600px;
+        height: 400px;
+    }*/
+    
 </style>
