@@ -48,6 +48,8 @@ export async function createRestaurant(data) {
             description: data.description,
             website: data.website,
             Id_Country: parseInt(data.Id_Country),
+            latitude: data.latitude,
+            longitude: data.longitude,
         }
     });
 }

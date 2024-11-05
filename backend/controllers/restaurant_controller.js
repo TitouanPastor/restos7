@@ -8,6 +8,8 @@ import {
     addRestaurantPhotoLink
 } from '../services/restaurant_service.js';
 
+import axios from 'axios';
+
 // Obtenir tous les restaurants
 export async function getAllRestaurantsHandler(req, res) {
     try {
@@ -34,6 +36,12 @@ export async function getRestaurantByIdHandler(req, res) {
 // Créer un nouveau restaurant
 export async function createRestaurantHandler(req, res) {
     try {
+        // récupérer la longitude et la latitude avec l'api gmap
+        const address = `${req.body.address} ${req.body.postal_code} ${req.body.city}`;
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GMAP_API_KEY}`);
+        const location = response.data.results[0].geometry.location;
+        req.body.latitude = location.lat;
+        req.body.longitude = location.lng;
         // Créer le nouveau restaurant
         const newRestaurant = await createRestaurant(req.body);
 
