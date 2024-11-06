@@ -7,7 +7,10 @@
         <Post :restaurant="restaurant" />
       </div>
     </div>
-    <LeafletMap v-if="showMap" class="z-0 flex flex-grow" />
+    <div v-if="showMap" class="flex flex-grow flex-col relative">
+      <!-- <div class="sticky top-6" >sticky</div> -->
+      <LeafletMap class="z-0 sticky top-14 flex-grow max-h-screen" :elements="posts" />
+</div>
   </main>
   <Footer @toggleView="toggleView" :isDesktop="isDesktop" :showMap="showMap" />
 </template>
