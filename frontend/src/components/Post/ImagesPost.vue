@@ -1,8 +1,8 @@
 <!-- https://ismail9k.github.io/vue3-carousel/examples.html -->
 <template>
-    <Carousel :items-to-show="1" :wrap-around="true" :breakpoints="breakpoints">
+    <Carousel :items-to-show="1" :wrap-around="true" :autoplay="2500" :pauseAutoplayOnHover="true" :breakpoints="breakpoints">
         <Slide v-for="image in images" :key="image.photo.Id_Photo">
-            <div class="carousel__item w-full h-56 px-1">
+            <div class="w-full h-56">
                 <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
                     :src="'http://localhost:3001' + image.photo.url" :alt="image.photo.alt" preview />
             </div>
@@ -40,6 +40,12 @@ const props = defineProps(
 );
 
 const images = ref(props.images);
+
+const config = {
+  autoplay: 2000,
+  wrapAround: true,
+  pauseAutoplayOnHover: true,
+};
 
 const breakpoints = ref({
     // 700px and up

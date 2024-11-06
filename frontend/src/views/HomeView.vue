@@ -1,8 +1,8 @@
 <template>
-  <main :class="{ 'h-full': !showMap || isDesktop }" class="flex max-w-7xl relative mx-auto gap-8">
+  <main :class="{ 'h-full': !showMap || isDesktop }" class="w-full flex flex-grow max-w-7xl relative mx-auto gap-8">
     <div v-if="(!showMap && !isDesktop) || isDesktop"
-      :class="{ 'w-full xl:grid-cols-3': (!showMap && !isDesktop) || isDesktop, 'w-6/12 h-full xl:grid-cols-2': isDesktop && showMap }"
-      class="w-full grid pt-6 sm:grid-cols-2 gap-x-8 gap-y-10 ">
+      :class="{ 'w-full xl:grid-cols-3': (!showMap && !isDesktop) || (isDesktop && !showMap), 'w-1/2 h-full xl:grid-cols-2': (isDesktop && showMap) }"
+      class="grid pt-6 sm:grid-cols-2 gap-x-8 gap-y-10 ">
       <div v-for="restaurant in posts" :key="restaurant.Id_Restaurant" class="flex justify-center">
         <Post :restaurant="restaurant" />
       </div>
@@ -10,8 +10,7 @@
         <p class="text-2xl text-gray-500">No restaurants found</p>
       </div>
     </div>
-    <div v-if="showMap" class="flex flex-grow flex-col relative">
-      <!-- <div class="sticky top-6" >sticky</div> -->
+    <div v-if="showMap" class="flex flex-grow flex-col relative bg-slate-200">
       <LeafletMap class="z-0 sticky top-14 flex-grow max-h-screen" :elements="posts" />
     </div>
   </main>
