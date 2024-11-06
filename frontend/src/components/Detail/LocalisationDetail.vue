@@ -1,42 +1,38 @@
+
 <template>
-    <main class="">
-        <l-map ref="map" v-model:zoom="zoom" v-model:center="center" :useGlobalLeaflet="false">
-            <l-tile-layer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-                      layer-type="base"
-                      name="Stadia Maps Basemap"></l-tile-layer>
-      
-            <l-marker v-for="arcade in arcades.features" :lat-lng="arcade.geometry.coordinates.reverse()"></l-marker>
-        </l-map>
-    </main>
+    <div>
+        <h1>Nous trouver</h1>
+        <div id="map" style="height:90vh;"></div>
+    </div>
 </template>
 
 <script setup>
-    import { ref } from "vue";
-    import "leaflet/dist/leaflet.css";
-    import { LMap, LTileLayer, LMarker} from "@vue-leaflet/vue-leaflet";
+import { ref, onMounted } from 'vue';
+import "leaflet/dist/leaflet.css";
+import * as L from 'leaflet';
 
-    import arcades from "./arcades.json"
-    let zoom = ref(6)
-    let center = ref([38, 139.69])
-</script>
-  
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-    }
+const initialMap = ref(null);
 
-    main {
-        height: 50vh;
-        width: 50vw;
-    }
+const addressPoints = [
+    { latitude: 43.60455, longitude: 1.453815 }
+];
 
-    /*
-    .map-container {
+onMounted(()=> {
+    initialMap.value = L.map('map').setView([43.60455, 1.453815], 14);
 
-        margin: 20px;
-        width: 600px;
-        height: 400px;
-    }*/
+    // Création d'un groupe de calques pour les marqueurs
+    const markers = L.layerGroup().addTo(initialMap.value);
     
-</style>
+    addressPoints.forEach((element, index) => {
+        const each_marker = new L.marker([element.latitude, element.longitude])
+        .bindPopup(`<strong> Nom Resto </strong> <br> 2 rue de la colombette`);
+        markers.addLayer(each_marker);
+    });
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, 
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+
+    }).addTo(initialMap.value);
+});
+</script>
