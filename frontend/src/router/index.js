@@ -14,6 +14,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/search/:query',
+      name: 'home_search',
+      component: HomeView,
+    },
+    {
       path: '/auth/login',
       name: 'login',
       component: LoginView
@@ -34,8 +39,8 @@ const router = createRouter({
       component: CreateRestaurantView
     },
     {
-      path: '/detail',
-      name: 'detail',
+      path: '/details/:id',
+      name: 'details',
       component: DetailView
     }
   ]

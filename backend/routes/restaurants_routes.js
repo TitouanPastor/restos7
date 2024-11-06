@@ -9,7 +9,7 @@ import {
     downvotePostHandler
 } from '../controllers/post_controller.js'; // Import des fonctions du contrôleur
 
-import { getAllRestaurantsHandler, getRestaurantByIdHandler, createRestaurantHandler, updateRestaurantHandler, deleteRestaurantHandler } from '../controllers/restaurant_controller.js';
+import { getAllRestaurantsHandler, getRestaurantByIdHandler, createRestaurantHandler, updateRestaurantHandler, deleteRestaurantHandler, getRestaurantByNameHandler } from '../controllers/restaurant_controller.js';
 
 import authMiddleware from '../middlewares/auth_middleware.js';
 import permissionMiddleware from '../middlewares/permissions_middleware.js';
@@ -24,6 +24,10 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     getRestaurantByIdHandler(req, res);
+});
+
+router.get('/search/:name', (req, res) => {
+    getRestaurantByNameHandler(req, res);
 });
 
 // Post a new restaurant

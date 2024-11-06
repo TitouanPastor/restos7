@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import Logo from '@/components/Logo.vue';
 import Button from 'primevue/button';
@@ -78,6 +78,32 @@ const toggleSearchPopup = () => {
 const logout = () => {
     store.dispatch('logout');
 };
+
+// Recherche automatique lors de la saisie
+watch(searchQuery, (query) => {
+    if (query.length == 0) {
+        router.push({ path: '/' });
+        return;
+    }
+    router.push({ path: '/search/'+query });
+});
+
+onMounted(async () => {
+    if (router.currentRoute.value.path.includes('/search')) {
+        searchQuery.value = router.currentRoute.value.params.query;
+    }
+});
+
+//Update la route quand je clique sur l'icon de recherche
+watch(() => router.currentRoute.value.path, (path) => {
+    if (path.includes('/search')) {
+        searchQuery.value = router.currentRoute.value.params.query;
+    }
+});
+
+
+
+
 </script>
 
 <style scoped>
