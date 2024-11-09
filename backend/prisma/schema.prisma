@@ -27,19 +27,20 @@ model Permission {
 }
 
 model Restaurant {
-  Id_Restaurant Int     @id @default(autoincrement())
+  Id_Restaurant Int      @id @default(autoincrement())
   name          String
   postal_code   String
   city          String
   address       String
   description   String
   website       String
+  score         Float?
   Id_Country    Int
   longitude     Float?
   latitude      Float?
-  country       Country @relation(fields: [Id_Country], references: [Id_Country])
+  country       Country  @relation(fields: [Id_Country], references: [Id_Country])
   posts         Post[] // La relation vers les posts liés
-  notes         Note[]
+  reviews       Review[]
   photos        Have[]
 }
 
@@ -76,10 +77,10 @@ model Post {
   @@id([Id_Post, Id_Restaurant])
 }
 
-model Note {
+model Review {
   Id_User       Int        @map("Id_Person")
   Id_Restaurant Int
-  score         String
+  score         Float
   comment       String?
   user          User       @relation(fields: [Id_User], references: [Id_User])
   restaurant    Restaurant @relation(fields: [Id_Restaurant], references: [Id_Restaurant])
@@ -96,7 +97,7 @@ model User {
   password        String
   photo           Photo?             @relation(fields: [Id_Photo], references: [Id_Photo]) // Relation optionnelle
   posts           Post[]
-  notes           Note[]
+  reviews         Review[]
   userPermissions PermissionToUser[]
 
   @@map("Person")

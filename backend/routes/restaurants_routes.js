@@ -9,7 +9,7 @@ import {
     downvotePostHandler
 } from '../controllers/post_controller.js'; // Import des fonctions du contrôleur
 
-import { getAllRestaurantsHandler, getRestaurantByIdHandler, createRestaurantHandler, updateRestaurantHandler, deleteRestaurantHandler, getRestaurantByNameHandler } from '../controllers/restaurant_controller.js';
+import { getAllRestaurantsHandler, getRestaurantByIdHandler, createRestaurantHandler, updateRestaurantHandler, deleteRestaurantHandler, getRestaurantByNameHandler, addReviewHandler } from '../controllers/restaurant_controller.js';
 
 import authMiddleware from '../middlewares/auth_middleware.js';
 import permissionMiddleware from '../middlewares/permissions_middleware.js';
@@ -55,6 +55,10 @@ router.get('/:restaurantId/posts', getPostsByRestaurantIdHandler);
 router.get('/:restaurantId/posts/:postId', getPostByIdHandler);
 
 router.post('/:restaurantId/posts', createPostHandler);
+
+router.get('/:restaurantId/reviews', addReviewHandler, () => { throw new NotImplementedError() });
+
+router.post('/:restaurantId/reviews', authMiddleware, addReviewHandler);
 
 router.put('/:restaurantId/posts/:postId', updatePostHandler);
 

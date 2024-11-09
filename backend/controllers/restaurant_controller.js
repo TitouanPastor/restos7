@@ -5,7 +5,8 @@ import {
     updateRestaurant,
     deleteRestaurant,
     addPhoto,
-    addRestaurantPhotoLink
+    addRestaurantPhotoLink,
+    addReview
 } from '../services/restaurant_service.js';
 
 import axios from 'axios';
@@ -125,6 +126,18 @@ export async function deleteRestaurantHandler(req, res) {
             return res.status(404).json({ message: 'Restaurant not found' });
         }
         res.status(200).json({ message: 'Restaurant deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// Ajouter une review
+export async function addReviewHandler(req, res) {
+    try {
+        req.body.Id_Restaurant = parseInt(req.params.restaurantId, 10);
+        req.body.Id_User = req.jwtUserId;
+        const newReview = await addReview(req.body);
+        res.status(201).json(newReview);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

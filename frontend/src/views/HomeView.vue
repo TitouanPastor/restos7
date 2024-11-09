@@ -1,6 +1,6 @@
 <template>
   <main :class="{ 'h-full': !showMap || isDesktop }" class="w-full flex flex-grow max-w-7xl relative mx-auto gap-8">
-    <div v-if="(!showMap && !isDesktop) || isDesktop"
+    <div v-show="(!showMap && !isDesktop) || isDesktop"
       :class="{ 'w-full xl:grid-cols-3': (!showMap && !isDesktop) || (isDesktop && !showMap), 'w-1/2 h-full xl:grid-cols-2': (isDesktop && showMap) }"
       class="grid pt-6 sm:grid-cols-2 gap-x-8 gap-y-10 ">
       <div v-for="restaurant in posts" :key="restaurant.Id_Restaurant" class="flex justify-center">
@@ -33,7 +33,6 @@ const isDesktop = computed(() => window.innerWidth >= 768);
 
 // Basculer entre la vue carte et liste selon l'option choisie
 function toggleView(view) {
-  console.log('View:', view);
   if (view === 'map') {
     if (isDesktop.value) {
       showMap.value = !showMap.value;

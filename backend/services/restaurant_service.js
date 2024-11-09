@@ -25,7 +25,7 @@ export async function getRestaurantById(restaurantId) {
         include: {
             country: true,
             posts: true,
-            notes: true,
+            reviews: true,
             // Récupérer les photos via la table de jonction "Have"
             photos: {
                 include: {
@@ -35,7 +35,6 @@ export async function getRestaurantById(restaurantId) {
         }
     });
 }
-
 
 
 export async function createRestaurant(data) {
@@ -106,3 +105,36 @@ export async function deleteRestaurant(restaurantId) {
         }
     });
 }
+
+// Ajouter un avis (une note) à un restaurant
+// addReview service function
+export async function addReview(data) {
+    // Créer un nouvel avis pour le restaurant spécifié
+    const newReview = await prisma.review.create({
+        data: {
+            Id_Restaurant: data.Id_Restaurant,
+            Id_User: data.Id_User,
+            score: data.score,
+            comment: data.comment
+        }
+    });
+
+    // Calculer la nouvelle moyenne des scores pour le restaurant
+    const averageScore = await prisma.review.aggregate({
+        where: {
+            Id_Restaurant: data.Id_Restaurant
+        },
+        _avg: {
+            score: true
+        }
+    });
+
+    // Mettre à jour le champ avg_score dans le restaurant
+    await prisma.restaurant.update({
+        where: { Id_Restaurant: data.Id_Restaurant },
+        data: { score: averageScore._avg.score }
+    });
+
+    return newReview;
+}
+
