@@ -17,11 +17,26 @@ import { stringSimilarity } from "string-similarity-js";
 export async function getAllRestaurantsHandler(req, res) {
     try {
         const restaurants = await getAllRestaurants();
-        res.status(200).json(restaurants);
+        const centerCoordinates = await getCenterCoordinatesHandler(restaurants);
+        res.status(200).json({ restaurants, centerCoordinates });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
+async function getCenterCoordinatesHandler(restaurants) {
+    const center = restaurants.reduce((acc, restaurant) => {
+        acc.latitude += restaurant.latitude;
+        acc.longitude += restaurant.longitude;
+        return acc;
+    }, { latitude: 0, longitude: 0 });
+
+    center.latitude /= restaurants.length;
+    center.longitude /= restaurants.length;
+
+    return center;
+}
+    
 
 // Obtenir un restaurant par son ID
 export async function getRestaurantByIdHandler(req, res) {
@@ -30,7 +45,8 @@ export async function getRestaurantByIdHandler(req, res) {
         if (!restaurant) {
             return res.status(404).json({ message: 'Restaurant not found' });
         }
-        res.status(200).json(restaurant);
+        const centerCoordinates = { latitude: restaurant.latitude, longitude: restaurant.longitude };
+        res.status(200).json({restaurant, centerCoordinates});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -55,7 +71,8 @@ export async function getRestaurantByNameHandler(req, res) {
 
         // Retourner les restaurants avec un score de similarité supérieur à 0.7
         const filteredRestaurants = sortedRestaurants.filter((r) => r.similarity > 0.2);
-        res.status(200).json(filteredRestaurants);
+        const centerCoordinates = await getCenterCoordinatesHandler(filteredRestaurants);
+        res.status(200).json({restaurants: filteredRestaurants, centerCoordinates});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

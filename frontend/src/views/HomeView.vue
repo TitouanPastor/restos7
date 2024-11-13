@@ -3,7 +3,7 @@
     <div v-show="(!showMap && !isDesktop) || isDesktop"
       :class="{ 'w-full xl:grid-cols-3': (!showMap && !isDesktop) || (isDesktop && !showMap), 'w-1/2 h-full xl:grid-cols-2': (isDesktop && showMap) }"
       class="grid pt-6 sm:grid-cols-2 gap-x-8 gap-y-10 ">
-      <div v-for="restaurant in posts" :key="restaurant.Id_Restaurant" class="flex justify-center">
+      <div v-for="restaurant in posts.restaurants" :key="restaurant.Id_Restaurant" class="flex justify-center">
         <Post :restaurant="restaurant" />
       </div>
       <div v-if="posts.length === 0" class="flex justify-center">
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="showMap" class="flex flex-grow flex-col relative bg-slate-200">
-      <LeafletMap class="z-0 sticky top-14 flex-grow max-h-screen" :elements="posts" />
+      <LeafletMap class="z-0 sticky top-14 flex-grow max-h-screen" :elements="posts.restaurants" :center="[posts.centerCoordinates.latitude, posts.centerCoordinates.longitude]" />
     </div>
   </main>
   <Footer @toggleView="toggleView" :isDesktop="isDesktop" :showMap="showMap" />
