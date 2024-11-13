@@ -1,6 +1,7 @@
 // store/index.js
 import { createStore } from 'vuex';
 import createPersistedState from "vuex-persistedstate";
+import api from '@/axios';
 
 export default createStore({
     plugins: [createPersistedState()],
@@ -29,6 +30,22 @@ export default createStore({
         },
         logout({ commit }) {
             commit('logout');
+        },
+        async checkTokenValidity({ state, commit }) {
+            if (state.token) {
+                try {
+                    await axios.get('auth/verify-token', {
+                        headers: {
+                            Authorization: `Bearer ${state.token}`
+                        }
+                    });
+                    // Si le token est valide, on ne fait rien
+                } catch (error) {
+                    // Si le token est invalide, déconnecter l'utilisateur
+                    console.log('Token is invalid, logging out');
+                    commit('logout');
+                }
+            }
         }
     },
     getters: {

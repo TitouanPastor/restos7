@@ -22,7 +22,12 @@ const login = async (req, res) => {
     }
 };
 
+const verifyToken = async (req, res) => {
+    res.json({ message: 'Token is valid' });
+};
+
 export default {
     register,
     login,
+    verifyToken
 };
