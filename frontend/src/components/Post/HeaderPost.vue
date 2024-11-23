@@ -2,8 +2,7 @@
     <div class="w-full bg">
         <header class="flex items-center justify-between max-w-7xl">
             <div class="flex items-center gap-2">
-                <h1 class="text-xl font-bold">{{ name }}</h1>
-                <i class="pi pi-external-link"></i>
+                <h1 class="text-2xl font-bold">{{ name }}</h1>
             </div>
             <!-- Utilisation de :model-value et @update:model-value pour la note -->
             <Rating :model-value="note" readonly />

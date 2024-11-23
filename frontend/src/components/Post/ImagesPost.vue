@@ -1,7 +1,8 @@
 <!-- https://ismail9k.github.io/vue3-carousel/examples.html -->
 <template>
-    <Carousel :items-to-show="1" :wrap-around="true" :autoplay="2500" :pauseAutoplayOnHover="true" :breakpoints="breakpoints">
-        <Slide v-for="image in images" :key="image.photo.Id_Photo">
+    <Carousel :items-to-show="1" :wrap-around="true" :autoplay="2500" :pauseAutoplayOnHover="true"
+        :breakpoints="breakpoints">
+        <Slide v-for="image in images" :key="image.photo.Id_Photo" class="p-2">
             <div class="w-full h-56">
                 <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
                     :src="'http://localhost:3001' + image.photo.url" :alt="image.photo.alt" preview />
@@ -23,42 +24,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, onMounted, defineProps, computed } from 'vue';
 import Image from 'primevue/image';
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import Button from 'primevue/button';
 
-// Données réactives pour les images et les options réactives du carousel
-const props = defineProps(
-    {
-        images: {
-            type: Array,
-            default: () => [],
-        },
-    }
-);
+const props = defineProps({
+    images: {
+        type: Array,
+        default: () => [],
+    },
+    customBreakpoints: {
+        type: Object,
+        default: null,
+    },
+});
+
+// Breakpoints par défaut
+const defaultBreakpoints = ref({
+    700: {
+        itemsToShow: props.images.length > 1 ? 1.15 : 1,
+        snapAlign: "start",
+    },
+    1024: {
+        itemsToShow: props.images.length > 1 ? 1.25 : 1,
+        snapAlign: "start",
+    },
+});
+
+// Calcul des breakpoints à utiliser
+const breakpoints = computed(() => props.customBreakpoints || defaultBreakpoints.value);
 
 const images = ref(props.images);
 
 const config = {
-  autoplay: 2000,
-  wrapAround: true,
-  pauseAutoplayOnHover: true,
+    autoplay: 2000,
+    wrapAround: true,
+    pauseAutoplayOnHover: true,
 };
-
-const breakpoints = ref({
-    // 700px and up
-    700: {
-        itemsToShow: images.value.length > 1 ? 1.15 : 1,
-        snapAlign: 'start',
-    },
-    // 1024 and up
-    1024: {
-        itemsToShow: images.value.length > 1 ? 1.25 : 1,
-        snapAlign: 'start',
-    },
-});
 
 // Variable pour contrôler la visibilité des navigators
 const showNavigators = ref(false);

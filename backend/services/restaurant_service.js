@@ -26,6 +26,11 @@ export async function getRestaurantById(restaurantId) {
             country: true,
             posts: true,
             reviews: true,
+            reviews: {
+                include: {
+                    user: true  // Inclure les informations de l'utilisateur qui a laissé l'avis
+                }
+            },
             // Récupérer les photos via la table de jonction "Have"
             photos: {
                 include: {

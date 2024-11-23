@@ -94,7 +94,7 @@ model User {
   firstname       String
   Id_Photo        Int?
   email           String             @unique
-  password        String
+  password        String             @ignore
   photo           Photo?             @relation(fields: [Id_Photo], references: [Id_Photo]) // Relation optionnelle
   posts           Post[]
   reviews         Review[]

@@ -1,8 +1,7 @@
 
 <template>
     <div>
-        <h1>Nous trouver</h1>
-        <div id="map" style="height:90vh;"></div>
+        <div id="map" style="height:55vh; width: 100%;"></div>
     </div>
 </template>
 
