@@ -34,7 +34,7 @@ export default createStore({
         async checkTokenValidity({ state, commit }) {
             if (state.token) {
                 try {
-                    await axios.get('auth/verify-token', {
+                    await api.get('auth/verify-token', {
                         headers: {
                             Authorization: `Bearer ${state.token}`
                         }
@@ -42,7 +42,7 @@ export default createStore({
                     // Si le token est valide, on ne fait rien
                 } catch (error) {
                     // Si le token est invalide, déconnecter l'utilisateur
-                    console.log('Token is invalid, logging out');
+                    console.log('Token is invalid, logging out :', error);
                     commit('logout');
                 }
             }

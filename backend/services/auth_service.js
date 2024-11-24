@@ -8,7 +8,7 @@ const registerUser = async (name, firstname, email, password) => {
     const hashedPassword = await bcrypt.hash(password, 10);  // Hash du mot de passe
 
     try {
-        const response = await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 name,              // Nom de l'utilisateur
                 firstname,         // Prénom de l'utilisateur
@@ -17,7 +17,11 @@ const registerUser = async (name, firstname, email, password) => {
                 // Pas besoin d'inclure Id_Photo ici car il est facultatif
             },
         });
-        return response;
+
+        // Exclure le mot de passe de l'objet utilisateur
+        const { password: _, ...userWithoutPassword } = user;
+
+        return userWithoutPassword;
     } catch (error) {
         console.error("Error creating user: ", error);
         throw error;
@@ -35,7 +39,7 @@ const loginUser = async (email, password) => {
                     permission: true,
                 }
             }
-        }, // Inclure les permissions de l'utilisateur
+        },
     });
 
     // Vérification de l'existence de l'utilisateur
@@ -66,6 +70,13 @@ const loginUser = async (email, password) => {
 const findUserById = async (id) => {
     return prisma.user.findUnique({
         where: { id },
+        select: {
+            id: true,
+            name: true,
+            firstname: true,
+            email: true,
+            password: false, // Exclude the password field
+        },
     });
 };
 

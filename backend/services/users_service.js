@@ -7,6 +7,7 @@ const getUserPersonnalInfo = async (userId) => {
         const user = await prisma.user.findUnique({
             where: { Id_User: userId },
             select: {
+                password: false, // Exclude the password field
                 name: true,
                 firstname: true,
                 email: true,
