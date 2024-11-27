@@ -1,11 +1,20 @@
-<!-- https://ismail9k.github.io/vue3-carousel/examples.html -->
 <template>
-    <Carousel :items-to-show="1" :wrap-around="true" :autoplay="2500" :pauseAutoplayOnHover="true"
-        :breakpoints="breakpoints">
+    <Carousel
+        :items-to-show="1"
+        :wrap-around="true"
+        :autoplay="computedAutoplay"
+        :pauseAutoplayOnHover="computedPauseAutoplayOnHover"
+        :breakpoints="breakpoints"
+    >
         <Slide v-for="image in images" :key="image.photo.Id_Photo" class="p-2">
             <div class="w-full h-56">
-                <Image class="w-full h-full" imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
-                    :src="'http://localhost:3001' + image.photo.url" :alt="image.photo.alt" preview />
+                <Image
+                    class="w-full h-full"
+                    imageClass="w-full h-full object-cover rounded-lg overflow-hidden"
+                    :src="'http://localhost:3001' + image.photo.url"
+                    :alt="image.photo.alt"
+                    preview
+                />
             </div>
         </Slide>
 
@@ -24,11 +33,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, computed } from 'vue';
-import Image from 'primevue/image';
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import Button from 'primevue/button';
+import { ref, onMounted, defineProps, computed } from "vue";
+import Image from "primevue/image";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import Button from "primevue/button";
 
 const props = defineProps({
     images: {
@@ -39,9 +48,21 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    autoplay: {
+        type: Boolean,
+        default: true, // Par défaut, autoplay est activé
+    },
+    autoplayDuration: {
+        type: Number,
+        default: 2500, // Durée par défaut de 2500ms
+    },
+    stopAutoplayOnHover: {
+        type: Boolean,
+        default: true, // Par défaut, pause autoplay au survol
+    },
 });
 
-// Breakpoints par défaut
+// Calculer les breakpoints à utiliser
 const defaultBreakpoints = ref({
     700: {
         itemsToShow: props.images.length > 1 ? 1.15 : 1,
@@ -52,24 +73,20 @@ const defaultBreakpoints = ref({
         snapAlign: "start",
     },
 });
-
-// Calcul des breakpoints à utiliser
 const breakpoints = computed(() => props.customBreakpoints || defaultBreakpoints.value);
 
+// Données réactives pour les images
 const images = ref(props.images);
 
-const config = {
-    autoplay: 2000,
-    wrapAround: true,
-    pauseAutoplayOnHover: true,
-};
+// Propriétés calculées pour les comportements facultatifs
+const computedAutoplay = computed(() => (props.autoplay ? props.autoplayDuration : 0));
+const computedPauseAutoplayOnHover = computed(() => props.stopAutoplayOnHover);
 
-// Variable pour contrôler la visibilité des navigators
+// Contrôle des navigateurs
 const showNavigators = ref(false);
 
-// Lors du montage, ajuster la visibilité des navigators selon la taille de l'écran
+// Ajuster la visibilité des navigateurs en fonction de la taille de la fenêtre
 onMounted(() => {
-    // Si la fenêtre a une largeur supérieure ou égale à 1024px (taille 'lg' de Tailwind)
     const checkWindowSize = () => {
         showNavigators.value = window.innerWidth >= 1024; // 'lg' corresponds to 1024px in Tailwind
     };
@@ -78,11 +95,11 @@ onMounted(() => {
     checkWindowSize();
 
     // Écoute les changements de redimensionnement de la fenêtre pour ajuster
-    window.addEventListener('resize', checkWindowSize);
+    window.addEventListener("resize", checkWindowSize);
 
     // Nettoyage lors de la destruction du composant
     return () => {
-        window.removeEventListener('resize', checkWindowSize);
+        window.removeEventListener("resize", checkWindowSize);
     };
 });
 </script>
