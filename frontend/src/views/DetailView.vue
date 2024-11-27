@@ -42,15 +42,15 @@
           <h2 class="text-xl font-bold mb-4">Restaurant Address</h2>
           <div v-if="restaurant" class="bg-gray-100 p-4 rounded-lg shadow">
             <p class="flex items-center mb-2">
-              <i class="pi pi-map-marker text-red-500 mr-2"></i>
+              <i class="pi pi-map-marker mr-2"></i>
               <strong>Address:</strong> <span class="ml-2">{{ restaurant.address }}</span>
             </p>
             <p class="flex items-center mb-2">
-              <i class="pi pi-building text-blue-500 mr-2"></i>
+              <i class="pi pi-building mr-2"></i>
               <strong>City:</strong> <span class="ml-2">{{ restaurant.city }}</span>
             </p>
             <p class="flex items-center mb-2">
-              <i class="pi pi-flag text-green-500 mr-2"></i>
+              <i class="pi pi-flag mr-2"></i>
               <strong>Country:</strong> <span class="ml-2">{{ restaurant.country.name }}</span>
             </p>
             <a
@@ -77,7 +77,7 @@
       modal
       header="Add Your Review"
       :closable="true"
-      class="w-full m-4"
+      class="w-full m-4 max-w-2xl"
       :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
     >
       <div>
@@ -86,8 +86,8 @@
           <Textarea id="comment" v-model="reviewData.comment" rows="3" class="w-full" autoResize placeholder="Write your review here..." />
         </div>
         <div class="mb-4">
-          <label for="rating" class="block font-medium mb-2">Rating</label>
-          <Rating id="rating" v-model="reviewData.rating" />
+          <label for="score" class="block font-medium mb-2">Rating</label>
+          <Rating id="score" v-model="reviewData.score" />
         </div>
         <div class="flex justify-end space-x-2">
           <Button label="Cancel" @click="closeReviewPopup" severity="contrast" outlined text />
@@ -139,7 +139,7 @@ const closeReviewPopup = () => {
 
 // Soumettre la review
 const submitReview = async () => {
-  if (!reviewData.value.comment || reviewData.value.rating === 0) {
+  if (!reviewData.value.comment || reviewData.value.score === 0) {
     alert("Please provide both a comment and a rating.");
     return;
   }
@@ -149,7 +149,6 @@ const submitReview = async () => {
 
     // Ajouter la nouvelle review localement après succès
     restaurant.value.reviews.push(response.data.review);
-    alert("Review submitted successfully!");
     closeReviewPopup();
   } catch (error) {
     console.error("Error submitting review:", error);
