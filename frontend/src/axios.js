@@ -27,7 +27,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       store.dispatch('logout'); // Déconnecter l'utilisateur en cas d'erreur 401
-      router.push({path: '/auth/login', query: { error: 'You need to be logged in to view this ressource.' }}); // Rediriger vers la page de login
+      router.push({path: '/auth/login', query: { error: 'You need to be logged in to use/view this ressource.' }}); // Rediriger vers la page de login
     }
     else if (error.response && error.response.status === 403) {
       store.dispatch('logout');

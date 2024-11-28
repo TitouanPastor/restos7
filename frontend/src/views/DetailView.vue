@@ -152,7 +152,7 @@ const submitReview = async () => {
     closeReviewPopup();
   } catch (error) {
     console.error("Error submitting review:", error);
-    alert("Failed to submit review. Please try again.");
+    alert(error.response.data.message || "An error occurred while submitting your review.");
   }
 };
 

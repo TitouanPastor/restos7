@@ -114,6 +114,21 @@ export async function deleteRestaurant(restaurantId) {
 // Ajouter un avis (une note) à un restaurant
 // addReview service function
 export async function addReview(data) {
+    // Vérifier si l'utilisateur a déjà laissé un avis sur ce restaurant
+    const existingReview = await prisma.review.findFirst({
+        where: {
+            Id_Restaurant: data.Id_Restaurant,
+            Id_User: data.Id_User
+        }
+    });
+
+    // Si un avis existe déjà, retourner une erreur ou une réponse personnalisée
+    if (existingReview) {
+        const error = new Error("You have already submitted a review for this restaurant.");
+        error.status = 409;
+        throw error;
+    }
+
     // Créer un nouvel avis pour le restaurant spécifié
     const newReview = await prisma.review.create({
         data: {
@@ -142,4 +157,5 @@ export async function addReview(data) {
 
     return newReview;
 }
+
 

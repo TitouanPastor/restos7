@@ -36,7 +36,7 @@ async function getCenterCoordinatesHandler(restaurants) {
 
     return center;
 }
-    
+
 
 // Obtenir un restaurant par son ID
 export async function getRestaurantByIdHandler(req, res) {
@@ -46,7 +46,7 @@ export async function getRestaurantByIdHandler(req, res) {
             return res.status(404).json({ message: 'Restaurant not found' });
         }
         const centerCoordinates = { latitude: restaurant.latitude, longitude: restaurant.longitude };
-        res.status(200).json({restaurant, centerCoordinates});
+        res.status(200).json({ restaurant, centerCoordinates });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -72,7 +72,7 @@ export async function getRestaurantByNameHandler(req, res) {
         // Retourner les restaurants avec un score de similarité supérieur à 0.7
         const filteredRestaurants = sortedRestaurants.filter((r) => r.similarity > 0.2);
         const centerCoordinates = await getCenterCoordinatesHandler(filteredRestaurants);
-        res.status(200).json({restaurants: filteredRestaurants, centerCoordinates});
+        res.status(200).json({ restaurants: filteredRestaurants, centerCoordinates });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -156,6 +156,9 @@ export async function addReviewHandler(req, res) {
         const newReview = await addReview(req.body);
         res.status(201).json(newReview);
     } catch (error) {
+        if (error.status == 409) {
+            return res.status(409).json({ message: 'You have already reviewed this restaurant' });
+        }
         res.status(500).json({ message: error.message });
     }
 }
