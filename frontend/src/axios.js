@@ -2,11 +2,10 @@
 import axios from 'axios';
 import store from './store'; // Importer Vuex store
 import router from './router'; // Importer Vue Router si nécessaire
-import message from './presets/aura/message';
 
 // Crée une instance Axios
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // URL de base de votre API
+  baseURL: import.meta.env.VITE_BASE_API_URL,
 });
 
 // Intercepteur de requêtes : Ajouter le token JWT à chaque requête
