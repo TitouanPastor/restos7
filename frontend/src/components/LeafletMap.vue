@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full h-full">
         <l-map :use-global-leaflet="false" ref="map" :zoom="zoom" :center="center">
             <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
                 name="OpenStreetMap"></l-tile-layer>

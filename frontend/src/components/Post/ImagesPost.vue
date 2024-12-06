@@ -50,7 +50,7 @@ const props = defineProps({
   },
   autoplay: {
     type: Boolean,
-    default: true, // Par défaut, autoplay est activé
+    default: false, // Par défaut, autoplay est activé
   },
   autoplayDuration: {
     type: Number,

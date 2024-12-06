@@ -1,5 +1,5 @@
 <template>
-  <Carousel :items-to-show="2" :snapAlign="start" :autoplay="4000" :pauseAutoplayOnHover="true"
+  <Carousel :items-to-show="2" :wrap-around="false"
     :breakpoints="breakpoints">
     <Slide v-for="review in reviews" :key="review.Id_User" class="px-2 py-2">
       <div class="review-card p-4 w-full h-full bg-white shadow-md rounded-lg flex flex-col justify-between">
@@ -26,19 +26,19 @@
           <Button icon="pi pi-angle-left" severity="contrast" rounded class="w-full h-full" />
         </template>
       </navigation>
-      <Pagination />
+      <Pagination v-if="showPagination" />
     </template>
   </Carousel>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue';
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
-import Button from 'primevue/button';
-import Rating from 'primevue/rating';
-import 'vue3-carousel/dist/carousel.css';
+import { ref, defineProps, computed, onUnmounted } from "vue";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import Button from "primevue/button";
+import Rating from "primevue/rating";
+import "vue3-carousel/dist/carousel.css";
 
-// Définition des props
+// Props pour les données des reviews
 const props = defineProps({
   reviews: {
     type: Array,
@@ -46,33 +46,44 @@ const props = defineProps({
   },
 });
 
+// Breakpoints pour le carousel
 const breakpoints = ref({
-  // 1024 and up
   1024: {
     itemsToShow: 4,
-    snapAlign: 'start',
+  },
+  768: {
+    itemsToShow: 3,
+  },
+  480: {
+    itemsToShow: 2,
   },
 });
 
-// Variable pour contrôler la visibilité des navigators
-const showNavigators = ref(false);
+// Calculer dynamiquement le nombre d'items affichés
+const itemsToShow = computed(() => {
+  const width = window.innerWidth;
+  if (width >= 1024) return 4;
+  if (width >= 768) return 3;
+  if (width >= 480) return 2;
+  return 1;
+});
 
-// Lors du montage, ajuster la visibilité des navigators selon la taille de l'écran
-onMounted(() => {
-  const checkWindowSize = () => {
-    showNavigators.value = window.innerWidth >= 1024; // 'lg' corresponds to 1024px in Tailwind
-  };
+// Calculs dynamiques pour les navigateurs et la pagination
+const showNavigators = computed(() => props.reviews.length > itemsToShow.value);
+const showPagination = computed(() => props.reviews.length > itemsToShow.value);
 
-  // Vérifie la taille actuelle de la fenêtre
-  checkWindowSize();
+// Mettre à jour les valeurs en fonction du redimensionnement de la fenêtre
+const updateCarouselVisibility = () => {
+  const width = window.innerWidth;
+  // itemsToShow sera automatiquement recalculé grâce à `computed`
+};
 
-  // Écoute les changements de redimensionnement de la fenêtre
-  window.addEventListener('resize', checkWindowSize);
+// Ajouter un écouteur d'événement pour surveiller les changements de taille de fenêtre
+window.addEventListener("resize", updateCarouselVisibility);
 
-  // Nettoyage lors de la destruction du composant
-  return () => {
-    window.removeEventListener('resize', checkWindowSize);
-  };
+// Nettoyage lors de la destruction du composant
+onUnmounted(() => {
+  window.removeEventListener("resize", updateCarouselVisibility);
 });
 </script>
 
