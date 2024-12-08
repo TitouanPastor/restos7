@@ -28,7 +28,11 @@ export async function getRestaurantById(restaurantId) {
             reviews: true,
             reviews: {
                 include: {
-                    user: true  // Inclure les informations de l'utilisateur qui a laissé l'avis
+                    user: {
+                        include: {
+                            password: false
+                        }
+                    }
                 }
             },
             // Récupérer les photos via la table de jonction "Have"
@@ -136,6 +140,17 @@ export async function addReview(data) {
             Id_User: data.Id_User,
             score: data.score,
             comment: data.comment
+        },
+        include: {
+            user: {
+                select: {
+                    Id_User: true,
+                    firstname: true,
+                    name: true,
+                    email: true,
+                    // Exclure le champ `password` si nécessaire
+                }
+            }
         }
     });
 

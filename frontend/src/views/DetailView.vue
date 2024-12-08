@@ -94,7 +94,6 @@
 
 <script setup>
 import CommentairesDetail from "@/components/Detail/CommentairesDetail.vue";
-import LocalisationDetail from "@/components/Detail/LocalisationDetail.vue";
 import LeafletMap from "@/components/LeafletMap.vue";
 import FooterPost from "@/components/Post/FooterPost.vue";
 import Images from "@/components/Post/ImagesPost.vue";
@@ -146,7 +145,9 @@ const submitReview = async () => {
     const response = await api.post(`/restaurants/${idRestaurant.value}/reviews`, reviewData.value);
 
     // Ajouter la nouvelle review localement après succès
-    restaurant.value.reviews.push(response.data.review);
+    console.log("Review submitted successfully:", response.data);
+    restaurant.value.reviews.push(response.data);
+    console.log("restaurant.value.reviews", restaurant.value.reviews);
     closeReviewPopup();
   } catch (error) {
     console.error("Error submitting review:", error);

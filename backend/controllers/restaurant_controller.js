@@ -154,6 +154,7 @@ export async function addReviewHandler(req, res) {
         req.body.Id_Restaurant = parseInt(req.params.restaurantId, 10);
         req.body.Id_User = req.jwtUserId;
         const newReview = await addReview(req.body);
+        console.log(newReview);
         res.status(201).json(newReview);
     } catch (error) {
         if (error.status == 409) {
